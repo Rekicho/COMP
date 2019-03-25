@@ -1,7 +1,5 @@
 class Fac {
 	public int ComputeFac(int num){
-	while(123dad){}
-	while(){}
 	return 0;
 	}
 	public static void main(String[] a){

@@ -3,7 +3,9 @@
 import java.io.*;
 
 public class jmm/*@bgen(jjtree)*/implements jmmTreeConstants, jmmConstants {/*@bgen(jjtree)*/
-  protected static JJTjmmState jjtree = new JJTjmmState();public static void printUsage() {
+  protected static JJTjmmState jjtree = new JJTjmmState();static int errors = 0;
+
+        public static void printUsage() {
                 System.out.println("Usage:  ");
                 System.out.println("       java jmm <input_file.jmm>");
         }
@@ -296,9 +298,7 @@ jjtn000.name = t.image;
         }
         Statement();
       }
-      jj_consume_token(RETURN);
-      Expression();
-      jj_consume_token(SEMICOLON);
+      Return();
       jj_consume_token(RBRACE);
     } catch (Throwable jjte000) {
 if (jjtc000) {
@@ -372,6 +372,35 @@ if (jjtc000) {
 jjtree.closeNodeScope(jjtn000, true);
                                 jjtc000 = false;
 jjtn000.name = t.image;
+    } catch (Throwable jjte000) {
+if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
+  }
+
+  static final public void Return() throws ParseException {/*@bgen(jjtree) Return */
+  ASTReturn jjtn000 = new ASTReturn(JJTRETURN);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      jj_consume_token(RETURN);
+      Expression();
+      jj_consume_token(SEMICOLON);
     } catch (Throwable jjte000) {
 if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -494,11 +523,11 @@ jjtn000.type = "if";
           Expression();
           jj_consume_token(RPAREN);
         } catch (ParseException e) {
-error_skipto(RPAREN);
+error_skipto(RPAREN); errors++; if(errors == 10) System.exit(10);
         }
         Statement();
 jjtree.closeNodeScope(jjtn000, true);
-                                                                                                               jjtc000 = false;
+                                                                                                                                                          jjtc000 = false;
 jjtn000.type = "while";
         break;
         }
@@ -1116,15 +1145,6 @@ if (jjtc000) {
     finally { jj_save(9, xla); }
   }
 
-  static private boolean jj_3R_30()
- {
-    if (jj_scan_token(INT)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_42()) jj_scanpos = xsp;
-    return false;
-  }
-
   static private boolean jj_3R_22()
  {
     Token xsp;
@@ -1139,16 +1159,16 @@ if (jjtc000) {
     return false;
   }
 
-  static private boolean jj_3_1()
- {
-    if (jj_3R_14()) return true;
-    return false;
-  }
-
   static private boolean jj_3R_21()
  {
     if (jj_scan_token(SLASH)) return true;
     if (jj_3R_29()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_1()
+ {
+    if (jj_3R_14()) return true;
     return false;
   }
 
@@ -1401,6 +1421,17 @@ if (jjtc000) {
     return false;
   }
 
+  static private boolean jj_3R_33()
+ {
+    if (jj_3R_16()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_7()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
   static private boolean jj_3_2()
  {
     if (jj_3R_15()) return true;
@@ -1410,17 +1441,6 @@ if (jjtc000) {
   static private boolean jj_3_4()
  {
     if (jj_3R_15()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_33()
- {
-    if (jj_3R_16()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_7()) { jj_scanpos = xsp; break; }
-    }
     return false;
   }
 
@@ -1503,6 +1523,15 @@ if (jjtc000) {
       if (jj_3R_31()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RBRACE)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_30()
+ {
+    if (jj_scan_token(INT)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_42()) jj_scanpos = xsp;
     return false;
   }
 

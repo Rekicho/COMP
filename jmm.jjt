@@ -9,6 +9,8 @@ PARSER_BEGIN(jmm)
 import java.io.*;
 
 public class jmm {
+	static int errors = 0;
+
 	public static void printUsage() {
 		System.out.println("Usage:  ");
 		System.out.println("       java jmm <input_file.jmm>");
@@ -155,7 +157,7 @@ void MethodDeclaration(): {Token t;}
 {
 	Type() t=<IDENTIFIER> {jjtThis.name = t.image;} "(" [Parameters()] ")" "{" 
 		
-	(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* "return" Expression() ";" "}"
+	(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* Return() "}"
 }
 
 void Parameters(): {}
@@ -166,6 +168,11 @@ void Parameters(): {}
 void Parameter(): {Token t;}
 {
 	Type() t=<IDENTIFIER> {jjtThis.name = t.image;}
+}
+
+void Return(): {}
+{
+	"return" Expression() ";"
 }
 
 void Type() : {Token t;}
@@ -179,7 +186,7 @@ void Statement(): {Token t;}
 {
 	  "{" (Statement())* "}"  {jjtThis.type = "multiple";}
 	| t="if" "(" Expression() ")" Statement() "else" Statement() {jjtThis.type = "if";}
-	| t="while" try {"(" Expression() ")"} catch(ParseException e) { error_skipto(RPAREN); } Statement() {jjtThis.type = "while";}
+	| t="while" try {"(" Expression() ")"} catch(ParseException e) { error_skipto(RPAREN); errors++; if(errors == 10) System.exit(10);} Statement() {jjtThis.type = "while";}
 	| LOOKAHEAD(<IDENTIFIER> "[") t=<IDENTIFIER> ArrayAcc() "=" Expression() ";" {jjtThis.type = "[]="; jjtThis.identifier = t.image;}
 	| LOOKAHEAD(2) t=<IDENTIFIER> "=" Expression() ";" {jjtThis.type = "="; jjtThis.identifier = t.image;}
 	| Expression() ";"

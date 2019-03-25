@@ -9,18 +9,19 @@ public interface jmmTreeConstants
   public int JJTMETHODDECLARATION = 5;
   public int JJTPARAMETERS = 6;
   public int JJTPARAMETER = 7;
-  public int JJTTYPE = 8;
-  public int JJTSTATEMENT = 9;
-  public int JJTVOID = 10;
-  public int JJTAND = 11;
-  public int JJTLESS = 12;
-  public int JJTADD = 13;
-  public int JJTSUB = 14;
-  public int JJTMULT = 15;
-  public int JJTDIV = 16;
-  public int JJTLITERAL = 17;
-  public int JJTOTHERLITERAL = 18;
-  public int JJTMETHODPARAMS = 19;
+  public int JJTRETURN = 8;
+  public int JJTTYPE = 9;
+  public int JJTSTATEMENT = 10;
+  public int JJTVOID = 11;
+  public int JJTAND = 12;
+  public int JJTLESS = 13;
+  public int JJTADD = 14;
+  public int JJTSUB = 15;
+  public int JJTMULT = 16;
+  public int JJTDIV = 17;
+  public int JJTLITERAL = 18;
+  public int JJTOTHERLITERAL = 19;
+  public int JJTMETHODPARAMS = 20;
 
 
   public String[] jjtNodeName = {
@@ -32,6 +33,7 @@ public interface jmmTreeConstants
     "MethodDeclaration",
     "Parameters",
     "Parameter",
+    "Return",
     "Type",
     "Statement",
     "void",
@@ -46,4 +48,4 @@ public interface jmmTreeConstants
     "MethodParams",
   };
 }
-/* JavaCC - OriginalChecksum=084fd53cf084f6be03f49f5666a5a9c6 (do not edit this line) */
+/* JavaCC - OriginalChecksum=8a01b2d2d82a84cf7274f3f8175d1e2f (do not edit this line) */

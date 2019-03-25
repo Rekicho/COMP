@@ -13,6 +13,8 @@ public class jmm/*@bgen(jjtree)*/implements jmmTreeConstants/*@egen*/ {/*@bgen(j
   protected static JJTjmmState jjtree = new JJTjmmState();
 
 /*@egen*/
+	static int errors = 0;
+
 	public static void printUsage() {
 		System.out.println("Usage:  ");
 		System.out.println("       java jmm <input_file.jmm>");
@@ -290,7 +292,7 @@ void MethodDeclaration(): {/*@bgen(jjtree) MethodDeclaration */
 /*@egen*/
 	Type() t=<IDENTIFIER> {jjtn000.name = t.image;} "(" [Parameters()] ")" "{" 
 		
-	(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* "return" Expression() ";" "}"/*@bgen(jjtree)*/
+	(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* Return() "}"/*@bgen(jjtree)*/
         } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -380,6 +382,37 @@ void Parameter(): {/*@bgen(jjtree) Parameter */
 /*@egen*/
 }
 
+void Return(): {/*@bgen(jjtree) Return */
+  ASTReturn jjtn000 = new ASTReturn(JJTRETURN);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) Return */
+        try {
+/*@egen*/
+	"return" Expression() ";"/*@bgen(jjtree)*/
+        } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            throw (RuntimeException)jjte000;
+          }
+          if (jjte000 instanceof ParseException) {
+            throw (ParseException)jjte000;
+          }
+          throw (Error)jjte000;
+        } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+        }
+/*@egen*/
+}
+
 void Type() : {/*@bgen(jjtree) Type */
                ASTType jjtn000 = new ASTType(JJTTYPE);
                boolean jjtc000 = true;
@@ -424,11 +457,11 @@ void Statement(): {/*@bgen(jjtree) Statement */
                                                                        jjtc000 = false;
                                                                      }
 /*@egen*/ {jjtn000.type = "if";}
-	| t="while" try {"(" Expression() ")"} catch(ParseException e) { error_skipto(RPAREN); } Statement()/*@bgen(jjtree)*/
-                                                                                                             {
-                                                                                                               jjtree.closeNodeScope(jjtn000, true);
-                                                                                                               jjtc000 = false;
-                                                                                                             }
+	| t="while" try {"(" Expression() ")"} catch(ParseException e) { error_skipto(RPAREN); errors++; if(errors == 10) System.exit(10);} Statement()/*@bgen(jjtree)*/
+                                                                                                                                                        {
+                                                                                                                                                          jjtree.closeNodeScope(jjtn000, true);
+                                                                                                                                                          jjtc000 = false;
+                                                                                                                                                        }
 /*@egen*/ {jjtn000.type = "while";}
 	| LOOKAHEAD(<IDENTIFIER> "[") t=<IDENTIFIER> ArrayAcc() "=" Expression() ";"/*@bgen(jjtree)*/
                                                                                      {
