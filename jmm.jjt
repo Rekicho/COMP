@@ -1,0 +1,236 @@
+options
+{
+	LOOKAHEAD=1;
+	MULTI=true;
+}
+
+PARSER_BEGIN(jmm)
+
+import java.io.*;
+
+public class jmm {
+	public static void printUsage() {
+		System.out.println("Usage:  ");
+		System.out.println("       java jmm <input_file.jmm>");
+	}
+
+	public static void main(String args[]) throws ParseException {
+		if(args.length != 1) {
+			printUsage();
+			return;
+		}
+			
+		FileInputStream file;
+		try {
+			file = new FileInputStream(args[0]);
+		} catch (Exception e) {
+			System.err.println("File " + args[0] + " not found");
+			return;
+		}
+		
+		jmm myjmm = new jmm(file);
+		SimpleNode root = myjmm.Program(); // devolve referência para o nó raiz da árvore
+
+		root.dump(""); // imprime no ecrã a árvore
+	}
+}
+
+PARSER_END(jmm)
+
+// WHITE SPACE
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+// COMMENTS
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <FORMAL_COMMENT: "/**" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+// RESERVED
+TOKEN :
+{
+  < BOOLEAN: "boolean" >
+| < CLASS: "class" >
+| < ELSE: "else" >
+| < EXTENDS: "extends" >
+| < FALSE: "false" >
+| < IF: "if" >
+| < INT: "int" >
+| < LENGTH: "length" >
+| < MAIN: "main" >
+| < NEW: "new" >
+| < PUBLIC: "public" >
+| < RETURN: "return" >
+| < STATIC: "static" >
+| < STRING: "String" >
+| < THIS: "this" >
+| < TRUE: "true" >
+| < VOID: "void" >
+| < WHILE: "while" >
+}
+
+// IDENTIFIER AND INTEGER
+TOKEN : 
+{
+  < IDENTIFIER : (["A"-"Z","a"-"z","$","_"]) (["A"-"Z","a"-"z","0"-"9","$","_"])* >
+| < INTEGERLITERAL: (["1"-"9"] (["0"-"9"])*) | ("0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+) | ("0" (["0"-"7"])*) >
+}
+
+// SEPARATORS
+TOKEN :
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+| < SEMICOLON: ";" >
+| < COMMA: "," >
+| < DOT: "." >
+}
+
+// OPERATORS
+TOKEN : 
+{
+  < ASSIGN: "=" >
+| < LT: "<" >
+| < BANG: "!" >
+| < SC_AND: "&&" >
+| < PLUS: "+" >
+| < MINUS: "-" >
+| < STAR: "*" >
+| < SLASH: "/" >
+}
+
+JAVACODE
+void error_skipto(int kind) {
+  ParseException e = generateParseException();  // generate the exception object.
+  System.out.println(e.toString());  // print the error message
+  Token t;
+  do {
+    t = getNextToken();
+  } while (t.kind != kind);
+    // The above loop consumes tokens all the way up to a token of
+    // "kind".  We use a do-while loop rather than a while because the
+    // current token is the one immediately before the erroneous token
+    // (in our case the token immediately before what should have been
+    // "if"/"while".
+}
+
+
+SimpleNode Program(): {}
+{
+	ClassDeclaration() <EOF>
+	  
+	  {return jjtThis;} // código Java entre chavetas
+}
+
+void ClassDeclaration(): {Token t1, t2;}
+{
+	"class" t1=<IDENTIFIER> {jjtThis.class_name = t1.image;} ["extends" t2=<IDENTIFIER> {jjtThis.extends_class = t2.image;}] "{" (VarDeclaration())* ("public" (MainDeclaration() | MethodDeclaration()))* "}" 
+}
+
+void VarDeclaration(): {Token t;}
+{
+	Type() t=<IDENTIFIER> ";" {jjtThis.name = t.image;}
+}
+
+void MainDeclaration(): {Token t;}
+{
+	"static" "void" "main" "(" "String" "[" "]" t=<IDENTIFIER> ")" "{" {jjtThis.args = t.image;}
+		(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* "}" 
+}
+
+void MethodDeclaration(): {Token t;}
+{
+	Type() t=<IDENTIFIER> {jjtThis.name = t.image;} "(" [Parameters()] ")" "{" 
+		
+	(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* "return" Expression() ";" "}"
+}
+
+void Parameters(): {}
+{
+	Parameter() ("," Parameter())*
+}
+
+void Parameter(): {Token t;}
+{
+	Type() t=<IDENTIFIER> {jjtThis.name = t.image;}
+}
+
+void Type() : {Token t;}
+{
+	( t="int" ["[" "]" {jjtThis.isArray = true;}] 
+	| t="boolean" 
+	| t=<IDENTIFIER>) {jjtThis.name = t.image;}
+}
+
+void Statement(): {Token t;}
+{
+	  "{" (Statement())* "}"  {jjtThis.type = "multiple";}
+	| t="if" "(" Expression() ")" Statement() "else" Statement() {jjtThis.type = "if";}
+	| t="while" try {"(" Expression() ")"} catch(ParseException e) { error_skipto(RPAREN); } Statement() {jjtThis.type = "while";}
+	| LOOKAHEAD(<IDENTIFIER> "[") t=<IDENTIFIER> ArrayAcc() "=" Expression() ";" {jjtThis.type = "[]="; jjtThis.identifier = t.image;}
+	| LOOKAHEAD(2) t=<IDENTIFIER> "=" Expression() ";" {jjtThis.type = "="; jjtThis.identifier = t.image;}
+	| Expression() ";"
+}
+
+void Expression() #void: {}
+{
+	LT() (LOOKAHEAD(2) "&&" LT() #AND(2))*
+}
+
+void LT() #void: {}
+{
+	Sum() (LOOKAHEAD(2) "<" Sum() #LESS(2))* 
+}
+
+void Sum() #void: {}
+{
+	Mult() (LOOKAHEAD(2) ("+" Mult() #ADD(2) | "-" Mult() #SUB(2)))*
+}
+
+void Mult() #void: {}
+{
+	Literal() (LOOKAHEAD(2) ("*" Literal() #MULT(2) | "/" Literal() #DIV(2)))*
+}
+
+void Literal() : {Token t;}
+{
+  t=<INTEGERLITERAL> OtherLiteral() {jjtThis.identifier = t.image;}
+	| "true" OtherLiteral() {jjtThis.identifier = "true";}
+	| "false" OtherLiteral() {jjtThis.identifier = "false";}
+	| t=<IDENTIFIER> OtherLiteral() {jjtThis.identifier = t.image;}
+	| "this" OtherLiteral() {jjtThis.identifier = "this";}
+	| "new" ((t="int" ArrayAcc() OtherLiteral() {jjtThis.identifier = "new int[...]";}) | (t=<IDENTIFIER> "(" ")" OtherLiteral() {jjtThis.identifier = "new " + t.image;}))
+	| t="!" Expression() OtherLiteral() {jjtThis.identifier = "!";}
+	| "(" Expression() ")" OtherLiteral()
+}
+
+
+void OtherLiteral() #void: {Token t;}
+{
+	ArrayAcc() OtherLiteral() {jjtThis.type = "[]";} #OtherLiteral
+	| "." (("length" OtherLiteral() {jjtThis.type = "length";} #OtherLiteral) | (t=<IDENTIFIER> "(" [ MethodParams() ] ")" OtherLiteral() {jjtThis.type = "call"; jjtThis.identifier = t.image;} #OtherLiteral))
+	| {}
+}
+
+void MethodParams(): {}
+{
+	Expression() ( "," Expression())*
+}
+
+void ArrayAcc() #void: {}
+{
+  "[" Expression() "]"	
+}
