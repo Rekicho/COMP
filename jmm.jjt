@@ -232,17 +232,17 @@ void Expression() #void: {}
 
 void LT() #void: {}
 {
-	Sum() (LOOKAHEAD(2) "<" Sum() #LESS(2))* 
+	Sum() (LOOKAHEAD(2) "<" Sum() #LESS)* 
 }
 
 void Sum() #void: {}
 {
-	Mult() (LOOKAHEAD(2) ("+" Mult() #ADD(2) | "-" Mult() #SUB(2)))*
+	Mult() (LOOKAHEAD(2) ("+" Mult() #ADD | "-" Mult() #SUB))*
 }
 
 void Mult() #void: {}
 {
-	Literal() (LOOKAHEAD(2) ("*" Literal() #MULT(2) | "/" Literal() #DIV(2)))*
+	Literal() (LOOKAHEAD(2) ("*" Literal() #MULT | "/" Literal() #DIV))*
 }
 
 void Literal() : {Token t;}
