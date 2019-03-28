@@ -19,7 +19,7 @@ class ASTStatement extends SimpleNode {
 		case "if": return "if...else";
 		case "while": return "while";
 		case "[]=": return identifier + "[...]=";
-		case "=": return identifier + "=";
+		case "=": return identifier + " =";
 	}
 
 	return "Statement";

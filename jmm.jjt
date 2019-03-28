@@ -132,32 +132,50 @@ void error_skipto(int kind) {
 
 SimpleNode Program(): {}
 {
-	ClassDeclaration() <EOF>
-	  
-	  {return jjtThis;} // código Java entre chavetas
+	ClassDeclaration() <EOF>	  
+	{return jjtThis;}
 }
 
 void ClassDeclaration(): {Token t1, t2;}
 {
-	"class" t1=<IDENTIFIER> {jjtThis.class_name = t1.image;} ["extends" t2=<IDENTIFIER> {jjtThis.extends_class = t2.image;}] "{" (VarDeclaration())* ("public" (MainDeclaration() | MethodDeclaration()))* "}" 
+	try {
+		"class" t1=<IDENTIFIER> {jjtThis.class_name = t1.image;} ["extends" t2=<IDENTIFIER> {jjtThis.extends_class = t2.image;}] "{" (VarDeclaration())* ("public" (MainDeclaration() | MethodDeclaration()))* "}" 
+	} catch(Exception e) {
+		System.out.println("Expected Class Declaration\n\n" + e);
+		System.exit(1);
+	}
 }
 
 void VarDeclaration(): {Token t;}
 {
-	Type() t=<IDENTIFIER> ";" {jjtThis.name = t.image;}
+	try {
+		Type() t=<IDENTIFIER> ";" {jjtThis.name = t.image;}
+	} catch(Exception e) {
+		System.out.println("Expected Var Declaration\n\n" + e);
+		System.exit(1);
+	}
 }
 
 void MainDeclaration(): {Token t;}
 {
-	"static" "void" "main" "(" "String" "[" "]" t=<IDENTIFIER> ")" "{" {jjtThis.args = t.image;}
+	try {
+		"static" "void" "main" "(" "String" "[" "]" t=<IDENTIFIER> ")" "{" {jjtThis.args = t.image;}
 		(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* "}" 
+	} catch(Exception e) {
+		System.out.println("Expected Main Declaration\n\n" + e);
+		System.exit(1);
+	}
 }
 
 void MethodDeclaration(): {Token t;}
 {
-	Type() t=<IDENTIFIER> {jjtThis.name = t.image;} "(" [Parameters()] ")" "{" 
-		
-	(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* Return() "}"
+	try {
+		Type() t=<IDENTIFIER> {jjtThis.name = t.image;} "(" [Parameters()] ")" "{" 	
+		(LOOKAHEAD(2) VarDeclaration())* (LOOKAHEAD(2) Statement())* Return() "}"
+	} catch(Exception e) {
+		System.out.println("Expected Method Declaration\n\n" + e);
+		System.exit(1);
+	}
 }
 
 void Parameters(): {}
@@ -177,24 +195,39 @@ void Return(): {}
 
 void Type() : {Token t;}
 {
-	( t="int" ["[" "]" {jjtThis.isArray = true;}] 
-	| t="boolean" 
-	| t=<IDENTIFIER>) {jjtThis.name = t.image;}
+	try{
+		( t="int" ["[" "]" {jjtThis.isArray = true;}] 
+		| t="boolean" 
+		| t=<IDENTIFIER>) {jjtThis.name = t.image;}
+	} catch(Exception e) {
+		System.out.println("Expected Type\n\n" + e);
+		System.exit(1);
+	}
 }
 
 void Statement(): {Token t;}
 {
-	  "{" (Statement())* "}"  {jjtThis.type = "multiple";}
-	| t="if" "(" Expression() ")" Statement() "else" Statement() {jjtThis.type = "if";}
-	| t="while" try {"(" Expression() ")"} catch(ParseException e) { error_skipto(RPAREN); errors++; if(errors == 10) System.exit(10);} Statement() {jjtThis.type = "while";}
-	| LOOKAHEAD(<IDENTIFIER> "[") t=<IDENTIFIER> ArrayAcc() "=" Expression() ";" {jjtThis.type = "[]="; jjtThis.identifier = t.image;}
-	| LOOKAHEAD(2) t=<IDENTIFIER> "=" Expression() ";" {jjtThis.type = "="; jjtThis.identifier = t.image;}
-	| Expression() ";"
+	try {
+		"{" (Statement())* "}"  {jjtThis.type = "multiple";}
+		| "if" "(" Expression() ")" Statement() "else" Statement() {jjtThis.type = "if";}
+		| "while" try {"(" Expression() ")"} catch(ParseException e) { error_skipto(RPAREN); errors++; if(errors == 10) System.exit(10);} Statement() {jjtThis.type = "while";}
+		| LOOKAHEAD(<IDENTIFIER> "[") t=<IDENTIFIER> ArrayAcc() "=" Expression() ";" {jjtThis.type = "[]="; jjtThis.identifier = t.image;}
+		| LOOKAHEAD(2) t=<IDENTIFIER> "=" Expression() ";" {jjtThis.type = "="; jjtThis.identifier = t.image;}
+		| Expression() ";"
+	} catch(Exception e) {
+		System.out.println("Expected Statement\n\n" + e);
+		System.exit(1);
+	}
 }
 
 void Expression() #void: {}
 {
-	LT() (LOOKAHEAD(2) "&&" LT() #AND(2))*
+	try {
+		LT() (LOOKAHEAD(2) "&&" LT() #AND(2))* 
+	} catch(Exception e) {
+		System.out.println("Expected Expression\n\n" + e);
+		System.exit(1);
+	}
 }
 
 void LT() #void: {}
