@@ -1,13 +1,13 @@
 # COMP
 
-## Compilar
+## Compile
 
-``` jjtree jmm.jjt```
+``` jjtree jmm.jjt ```
 
-``` javacc jmm.jj```
+``` javacc jmm.jj ```
 
-``` javac *.java```
+``` javac *.java ```
 
-## Executar
+## Execute
 
-``` java jmm  <input_file.jmm>```
+``` java jmm  <input_file.jmm> ```
