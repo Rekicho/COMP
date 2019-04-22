@@ -18,12 +18,14 @@ public class SymbolTable {
 		while (t.hasMoreElements() == true) {
 			key = (String) t.nextElement();
 			value = (Symbol) classSymbols.get(key);
-			System.out.println(key);
+			System.out.println("\t" + key);
 			if (value.type != null)
-				System.out.println(" type = " + value.type);
+				System.out.println("\t\ttype = " + value.type);
 			if (value.value != null)
-				System.out.println(" value = " + value.value);
+				System.out.println("\t\tvalue = " + value.value);
 		}
+
+		System.out.println("\n\n");
 
 		Hashtable<String, Symbol> hash;
 		t = functionSymbols.keys();
@@ -33,16 +35,16 @@ public class SymbolTable {
 			hash = (Hashtable<String, Symbol>) functionSymbols.get(key);
 
 			Enumeration tt = hash.keys();
-			System.out.println("function " + key + "Symbols:");
+			System.out.println("\t\tfunction " + key + "Symbols:");
 
 			while (tt.hasMoreElements() == true) {
 				key = (String) tt.nextElement();
 				value = (Symbol) hash.get(key);
-				System.out.println(key);
+				if(value.isParameter) System.out.println("\t\t\tParameter " + key); else System.out.println("\t\t\tLocal " + key);
 				if (value.type != null)
-					System.out.println(" type = " + value.type);
+					System.out.println("\t\t\t\ttype = " + value.type);
 				if (value.value != null)
-					System.out.println(" value = " + value.value);
+					System.out.println("\t\t\t\tname = " + value.value);
 			}
 		}
 	}

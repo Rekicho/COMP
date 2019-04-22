@@ -18,8 +18,12 @@ public class ASTMethodDeclaration extends SimpleNode {
 	}
 
 	public void buildST(Hashtable<String, Symbol> ST, Hashtable<String, Hashtable<String, Symbol>> fST) {
+		ASTType type = (ASTType) children[0];
+		String typeName = type.name;
+		if(type.isArray) typeName += "[]";
+		
 		Hashtable <String, Symbol> functionSymbols = new Hashtable<>();
-		fST.put(name, functionSymbols);
+		fST.put(typeName + " " + name, functionSymbols);
 		ST = functionSymbols;
 		
 		if (children != null) {

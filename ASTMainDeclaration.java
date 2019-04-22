@@ -23,7 +23,9 @@ class ASTMainDeclaration extends SimpleNode {
 	fST.put("main", functionSymbols);
 	ST = functionSymbols;
 
-	ST.put(args, new Symbol("String[]", args));
+	Symbol mainSymbol = new Symbol("String[]", args);
+	mainSymbol.isParameter = true;
+	ST.put(args, mainSymbol);
 	
 	if (children != null) {
 		for (int i = 0; i < children.length; ++i) {
