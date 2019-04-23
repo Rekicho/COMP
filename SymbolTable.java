@@ -2,6 +2,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 public class SymbolTable {
+	String className = "";
 	Hashtable<String, Symbol> symbols = new Hashtable<>();
 	Hashtable<String, FunctionSymbol> functions = new Hashtable<>();
 
@@ -13,7 +14,7 @@ public class SymbolTable {
 		String key;
 		Symbol value;
 		Enumeration t = symbols.keys();
-		System.out.println("class Symbols: ");
+		System.out.println("class " + className + " Symbols: ");
 
 		while (t.hasMoreElements() == true) {
 			key = (String) t.nextElement();

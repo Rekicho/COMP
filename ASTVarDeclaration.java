@@ -22,22 +22,16 @@ public class ASTVarDeclaration extends SimpleNode {
 		Symbol symbol = new Symbol(type.name,name);
 		
 		if(functionName == null) {
-			if(table.symbols.get(name) != null) {
-				Exception e = new Exception("Class local " + name + " declared more than once.");
-			
-				throw e;
-			}
+			if(table.symbols.get(name) != null)
+				throw new Exception("Class local " + name + " declared more than once.");
 
 			table.symbols.put(name,symbol);
 		}
 			
 
 		else {			
-			if(table.functions.get(functionName).locals.get(name) != null) {
-				Exception e = new Exception("Function " + functionName + " local " + name + " declared more than once.");
-			
-				throw e;
-			}
+			if(table.functions.get(functionName).locals.get(name) != null)
+				throw new Exception("Function " + functionName + " local " + name + " declared more than once.");
 
 			table.functions.get(functionName).locals.put(name,symbol);
 		}

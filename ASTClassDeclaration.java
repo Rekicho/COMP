@@ -18,5 +18,17 @@ class ASTClassDeclaration extends SimpleNode {
     return "class: " + class_name + (extends_class.equals("") ? "" : ("extends" + extends_class));
   }
 
+  public void buildST(SymbolTable table, String functionName) throws Exception {
+	table.className = class_name;
+
+	if (children != null) {
+		for (int i = 0; i < children.length; ++i) {
+			SimpleNode n = (SimpleNode) children[i];
+			if (n != null) {
+				n.buildST(table,functionName);
+			}
+		}
+	}
+	}
 }
 /* JavaCC - OriginalChecksum=accd6c615f837a4f4156eee86c99e791 (do not edit this line) */

@@ -14,6 +14,22 @@ class ASTMULT extends SimpleNode {
 	return "*";
   }
 
+  public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+	String type;
 
+	if (children != null) {
+		for (int i = 0; i < children.length; ++i) {
+			SimpleNode n = (SimpleNode) children[i];
+			if (n != null) {
+				type = n.semanticAnalysis(table,functionName);
+
+				if(!type.equals("int"))
+					throw new Exception("* expected integer but found " + type);
+			}
+		}
+	}
+
+	return "int";
+  }
 }
 /* JavaCC - OriginalChecksum=a00233398377fabcd1d752fd409bf567 (do not edit this line) */

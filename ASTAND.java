@@ -14,5 +14,23 @@ class ASTAND extends SimpleNode {
 	return "&&";
   }
 
+  public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+	String type;
+
+	if (children != null) {
+		for (int i = 0; i < children.length; ++i) {
+			SimpleNode n = (SimpleNode) children[i];
+			if (n != null) {
+				type = n.semanticAnalysis(table,functionName);
+
+				if(!type.equals("boolean"))
+					throw new Exception("&& expected boolean but found " + type);
+			}
+		}
+	}
+
+	return "boolean";
+  }
+
 }
 /* JavaCC - OriginalChecksum=4a4a14b55f8b490d21ea3ced19324c5c (do not edit this line) */

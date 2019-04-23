@@ -14,6 +14,22 @@ class ASTLESS extends SimpleNode {
 	return "<";
   }
 
+  public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+	String type;
 
+	if (children != null) {
+		for (int i = 0; i < children.length; ++i) {
+			SimpleNode n = (SimpleNode) children[i];
+			if (n != null) {
+				type = n.semanticAnalysis(table,functionName);
+
+				if(!type.equals("int"))
+					throw new Exception("< expected integer but found " + type);
+			}
+		}
+	}
+
+	return "boolean";
+  }
 }
 /* JavaCC - OriginalChecksum=80e981cb70049e1d63295d41a7f844d5 (do not edit this line) */

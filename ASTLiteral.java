@@ -15,5 +15,34 @@ class ASTLiteral extends SimpleNode {
   public String toString(){
 	return "Expression: " + identifier;
   }
+  
+  public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+	if(Character.isDigit(identifier.charAt(0))) {
+		if(children.length != 0)
+			throw new Exception("Expression found after IntegerLiteral " + identifier + ".");
+
+		return "int";
+	}
+	
+
+	if(identifier.equals("true") || identifier.equals("false")) {
+		if(children.length != 0)
+			throw new Exception("Expression found after " + identifier + ".");
+
+		return "boolean";
+	}
+
+	if(identifier.equals("this"))
+		return table.className;
+
+	if(identifier.equals("!"))
+	{
+		return "boolean";
+	}
+
+	return "";
+
+  }
+  
 }
 /* JavaCC - OriginalChecksum=a8d48e9a57e0088d4ff5320e922f78d0 (do not edit this line) */

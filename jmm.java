@@ -29,11 +29,11 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 		jmm myjmm = new jmm(file);
 		SimpleNode root = myjmm.Program(); // devolve referência para o nó raiz da árvore
-		//root.dump(""); // imprime no ecrã a árvore
+		root.dump(""); // imprime no ecrã a árvore
 
 		try{
 			SymbolTable ST = new SymbolTable(root);
-			ST.dump();
+			//ST.dump();
 			root.semanticAnalysis(ST,null);
 		} catch (Exception e) {
 			System.out.println(e);

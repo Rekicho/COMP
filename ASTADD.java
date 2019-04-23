@@ -14,5 +14,23 @@ class ASTADD extends SimpleNode {
 	  return "+";
   }
 
+  public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+	String type;
+
+	if (children != null) {
+		for (int i = 0; i < children.length; ++i) {
+			SimpleNode n = (SimpleNode) children[i];
+			if (n != null) {
+				type = n.semanticAnalysis(table,functionName);
+
+				if(!type.equals("int"))
+					throw new Exception("+ expected integer but found " + type);
+			}
+		}
+	}
+
+	return "int";
+  }
+
 }
 /* JavaCC - OriginalChecksum=a27409a1dcc9e09ff4c35def8683db96 (do not edit this line) */

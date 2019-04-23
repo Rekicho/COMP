@@ -18,11 +18,8 @@ public class ASTMethodDeclaration extends SimpleNode {
 	}
 
 	public void buildST(SymbolTable table, String functionName) throws Exception {
-		if(table.functions.get(name) != null) {
-			Exception e = new Exception("Function" + name + "declared twice");
-		
-			throw e;
-		}
+		if(table.functions.get(name) != null)
+			throw new Exception("Function" + name + "declared twice");
 
 		ASTType type = (ASTType) children[0];
 		String typeName = type.name;

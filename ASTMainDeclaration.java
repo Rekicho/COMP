@@ -19,11 +19,8 @@ class ASTMainDeclaration extends SimpleNode {
   }
 
   public void buildST(SymbolTable table, String functionName) throws Exception {
-	if(table.functions.get("main") != null) {
-		Exception e = new Exception("Function main declared twice");
-	
-		throw e;
-	}
+	if(table.functions.get("main") != null)
+		throw new Exception("Function main declared twice");
 
 	FunctionSymbol functionSymbol = new FunctionSymbol("void");
 	table.functions.put("main", functionSymbol);
