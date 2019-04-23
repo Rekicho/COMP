@@ -29,11 +29,15 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 		jmm myjmm = new jmm(file);
 		SimpleNode root = myjmm.Program(); // devolve referência para o nó raiz da árvore
-
 		//root.dump(""); // imprime no ecrã a árvore
 
-		SymbolTable ST = new SymbolTable(root);
-		ST.dump();
+		try{
+			SymbolTable ST = new SymbolTable(root);
+			ST.dump();
+			root.semanticAnalysis(ST,null);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	static void error_skipto(int kind) throws ParseException {/* @bgen(jjtree) error_skipto */

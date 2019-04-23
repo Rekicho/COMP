@@ -97,12 +97,23 @@ public class SimpleNode implements Node {
 		return id;
 	}
 
-	public void buildST(SymbolTable table, String functionName) {
+	public void buildST(SymbolTable table, String functionName) throws Exception {
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
 				if (n != null) {
 					n.buildST(table,functionName);
+				}
+			}
+		}
+	}
+
+	public void semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					n.semanticAnalysis(table,functionName);
 				}
 			}
 		}

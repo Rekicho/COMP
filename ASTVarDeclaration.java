@@ -17,14 +17,30 @@ public class ASTVarDeclaration extends SimpleNode {
 		return "var: " + this.name;
 	}
 
-	public void buildST(SymbolTable table, String functionName) {
+	public void buildST(SymbolTable table, String functionName) throws Exception {
 		ASTType type = (ASTType) children[0];
 		Symbol symbol = new Symbol(type.name,name);
 		
-		if(functionName == null)
-			table.symbols.put(name,symbol);
+		if(functionName == null) {
+			if(table.symbols.get(name) != null) {
+				Exception e = new Exception("Class local " + name + " declared more than once.");
+			
+				throw e;
+			}
 
-		else table.functions.get(functionName).locals.put(name,symbol);
+			table.symbols.put(name,symbol);
+		}
+			
+
+		else {			
+			if(table.functions.get(functionName).locals.get(name) != null) {
+				Exception e = new Exception("Function " + functionName + " local " + name + " declared more than once.");
+			
+				throw e;
+			}
+
+			table.functions.get(functionName).locals.put(name,symbol);
+		}
 	}
 
 }

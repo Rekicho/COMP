@@ -18,9 +18,15 @@ class ASTParameter extends SimpleNode {
 	return "parameter: " + this.name;
   }
 
-  public void buildST(SymbolTable table, String functionName) {
+  public void buildST(SymbolTable table, String functionName) throws Exception {
 	ASTType type = (ASTType) children[0];
 	Symbol symbol = new Symbol(type.name,name);
+
+	if(table.functions.get(functionName).params.get(name) != null)
+	{
+		Exception e = new Exception("Function " + functionName + " parameter " + name + " declared more than once.");
+		throw e;
+	}
 	
 	table.functions.get(functionName).params.put(name, symbol);
   }

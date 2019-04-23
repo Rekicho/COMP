@@ -18,7 +18,13 @@ class ASTMainDeclaration extends SimpleNode {
     return "main: param: " + this.args;
   }
 
-  public void buildST(SymbolTable table, String functionName) {
+  public void buildST(SymbolTable table, String functionName) throws Exception {
+	if(table.functions.get("main") != null) {
+		Exception e = new Exception("Function main declared twice");
+	
+		throw e;
+	}
+
 	FunctionSymbol functionSymbol = new FunctionSymbol("void");
 	table.functions.put("main", functionSymbol);
 

@@ -5,7 +5,7 @@ public class SymbolTable {
 	Hashtable<String, Symbol> symbols = new Hashtable<>();
 	Hashtable<String, FunctionSymbol> functions = new Hashtable<>();
 
-	public SymbolTable(SimpleNode root) {
+	public SymbolTable(SimpleNode root) throws Exception {
 		root.buildST(this, null);
 	}
 
