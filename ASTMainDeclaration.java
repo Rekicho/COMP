@@ -18,20 +18,18 @@ class ASTMainDeclaration extends SimpleNode {
     return "main: param: " + this.args;
   }
 
-  public void buildST(Hashtable<String, Symbol> ST, Hashtable<String, Hashtable<String, Symbol>> fST) {
-	Hashtable <String, Symbol> functionSymbols = new Hashtable<>();
-	fST.put("main", functionSymbols);
-	ST = functionSymbols;
+  public void buildST(SymbolTable table, String functionName) {
+	FunctionSymbol functionSymbol = new FunctionSymbol("void");
+	table.functions.put("main", functionSymbol);
 
 	Symbol mainSymbol = new Symbol("String[]", args);
-	mainSymbol.isParameter = true;
-	ST.put(args, mainSymbol);
+	functionSymbol.params.put(args,mainSymbol);
 	
 	if (children != null) {
 		for (int i = 0; i < children.length; ++i) {
 			SimpleNode n = (SimpleNode) children[i];
 			if (n != null) {
-				n.buildST(ST, fST);
+				n.buildST(table, "main");
 			}
 		}
 	}

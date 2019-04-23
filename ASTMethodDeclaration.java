@@ -17,20 +17,19 @@ public class ASTMethodDeclaration extends SimpleNode {
 		return "method: " + this.name;
 	}
 
-	public void buildST(Hashtable<String, Symbol> ST, Hashtable<String, Hashtable<String, Symbol>> fST) {
+	public void buildST(SymbolTable table, String functionName) {
 		ASTType type = (ASTType) children[0];
 		String typeName = type.name;
 		if(type.isArray) typeName += "[]";
 		
-		Hashtable <String, Symbol> functionSymbols = new Hashtable<>();
-		fST.put(typeName + " " + name, functionSymbols);
-		ST = functionSymbols;
+		FunctionSymbol functionSymbol = new FunctionSymbol(typeName);
+		table.functions.put(name, functionSymbol);
 		
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
 				if (n != null) {
-					n.buildST(ST, fST);
+					n.buildST(table, name);
 				}
 			}
 		}

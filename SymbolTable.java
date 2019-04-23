@@ -2,22 +2,22 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 public class SymbolTable {
-	Hashtable<String, Symbol> classSymbols = new Hashtable<>();
-	Hashtable<String, Hashtable<String, Symbol>> functionSymbols = new Hashtable<>();
+	Hashtable<String, Symbol> symbols = new Hashtable<>();
+	Hashtable<String, FunctionSymbol> functions = new Hashtable<>();
 
 	public SymbolTable(SimpleNode root) {
-		root.buildST(classSymbols, functionSymbols);
+		root.buildST(this, null);
 	}
 
 	public void dump() {
 		String key;
 		Symbol value;
-		Enumeration t = classSymbols.keys();
+		Enumeration t = symbols.keys();
 		System.out.println("class Symbols: ");
 
 		while (t.hasMoreElements() == true) {
 			key = (String) t.nextElement();
-			value = (Symbol) classSymbols.get(key);
+			value = (Symbol) symbols.get(key);
 			System.out.println("\t" + key);
 			if (value.type != null)
 				System.out.println("\t\ttype = " + value.type);
@@ -25,27 +25,17 @@ public class SymbolTable {
 				System.out.println("\t\tvalue = " + value.value);
 		}
 
-		System.out.println("\n\n");
+		t = functions.keys();
 
-		Hashtable<String, Symbol> hash;
-		t = functionSymbols.keys();
+		FunctionSymbol functionSymbol;
 
 		while (t.hasMoreElements()) {
 			key = (String) t.nextElement();
-			hash = (Hashtable<String, Symbol>) functionSymbols.get(key);
+			functionSymbol = (FunctionSymbol) functions.get(key);
 
-			Enumeration tt = hash.keys();
-			System.out.println("\t\tfunction " + key + "Symbols:");
+			System.out.println("\t\tfunction " + key + ":");
 
-			while (tt.hasMoreElements() == true) {
-				key = (String) tt.nextElement();
-				value = (Symbol) hash.get(key);
-				if(value.isParameter) System.out.println("\t\t\tParameter " + key); else System.out.println("\t\t\tLocal " + key);
-				if (value.type != null)
-					System.out.println("\t\t\t\ttype = " + value.type);
-				if (value.value != null)
-					System.out.println("\t\t\t\tname = " + value.value);
-			}
+			functionSymbol.dump();
 		}
 	}
 }

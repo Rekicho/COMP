@@ -97,12 +97,12 @@ public class SimpleNode implements Node {
 		return id;
 	}
 
-	public void buildST(Hashtable<String,Symbol> ST, Hashtable<String, Hashtable<String, Symbol>>fST) {
+	public void buildST(SymbolTable table, String functionName) {
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
 				if (n != null) {
-					n.buildST(ST,fST);
+					n.buildST(table,functionName);
 				}
 			}
 		}

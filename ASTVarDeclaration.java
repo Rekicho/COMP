@@ -17,10 +17,14 @@ public class ASTVarDeclaration extends SimpleNode {
 		return "var: " + this.name;
 	}
 
-	public void buildST(Hashtable<String,Symbol> ST, Hashtable<String, Hashtable<String, Symbol>> fST) {
+	public void buildST(SymbolTable table, String functionName) {
 		ASTType type = (ASTType) children[0];
 		Symbol symbol = new Symbol(type.name,name);
-		ST.put(name, symbol);
+		
+		if(functionName == null)
+			table.symbols.put(name,symbol);
+
+		else table.functions.get(functionName).locals.put(name,symbol);
 	}
 
 }

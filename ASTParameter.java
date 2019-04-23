@@ -18,11 +18,11 @@ class ASTParameter extends SimpleNode {
 	return "parameter: " + this.name;
   }
 
-  public void buildST(Hashtable<String,Symbol> ST, Hashtable<String, Hashtable<String, Symbol>> fST) {
+  public void buildST(SymbolTable table, String functionName) {
 	ASTType type = (ASTType) children[0];
 	Symbol symbol = new Symbol(type.name,name);
-	symbol.isParameter = true;
-	ST.put(name, symbol);
+	
+	table.functions.get(functionName).params.put(name, symbol);
   }
 }
 /* JavaCC - OriginalChecksum=7286d9338b7f7138e7c6c36551a2771c (do not edit this line) */
