@@ -13,7 +13,7 @@ public class SymbolTable {
 	public void dump() {
 		String key;
 		Symbol value;
-		Enumeration t = symbols.keys();
+		Enumeration<String> t = symbols.keys();
 		System.out.println("class " + className + " Symbols: ");
 
 		while (t.hasMoreElements() == true) {

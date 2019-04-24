@@ -7,8 +7,6 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 	protected static JJTjmmState jjtree = new JJTjmmState();
 	static int errors = 0;
 
-	//public static Hashtable<String,Symbol> ST = new Hashtable<>();
-
 	public static void printUsage() {
 		System.out.println("Usage:  ");
 		System.out.println("       java jmm <input_file.jmm>");
@@ -29,7 +27,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 		jmm myjmm = new jmm(file);
 		SimpleNode root = myjmm.Program(); // devolve referência para o nó raiz da árvore
-		root.dump(""); // imprime no ecrã a árvore
+		//root.dump(""); // imprime no ecrã a árvore
 
 		try{
 			SymbolTable ST = new SymbolTable(root);

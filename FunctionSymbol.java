@@ -11,7 +11,7 @@ public class FunctionSymbol {
 	}
 
 	public void dump() {
-		Enumeration t = params.keys();
+		Enumeration<String> t = params.keys();
 		String key;
 		Symbol value;
 
