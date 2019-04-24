@@ -24,5 +24,35 @@ class ASTOtherLiteral extends SimpleNode {
 	return "";
   }
 
+  public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+	if(!(parent instanceof ASTLiteral))
+		throw new Exception("Expression " + ((ASTOtherLiteral) parent).type + "found before expression");
+
+	ASTLiteral literal = (ASTLiteral) parent;
+
+	switch(type) {
+		case "[]": 
+				if(!literal.isArray(table,functionName))
+					throw new Exception(literal.identifier + " is not an array.");
+
+				SimpleNode n = (SimpleNode) children[0];
+
+				if(!n.semanticAnalysis(table,functionName).equals("int"))
+					throw new Exception("Integer Expression expected inside []");
+
+				return "[]";
+
+		case "length":
+				if(!literal.isArray(table,functionName))
+							throw new Exception(literal.identifier + " is not an array.");
+				
+				return "int";
+
+		// case "call": 
+	}
+			
+	return "";
+  }
+
 }
 /* JavaCC - OriginalChecksum=6a67081bb7fb5f77aa5f878ca7d3dcab (do not edit this line) */

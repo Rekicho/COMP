@@ -15,33 +15,38 @@ class ASTLiteral extends SimpleNode {
   public String toString(){
 	return "Expression: " + identifier;
   }
+
+  public String analyseVariables(SymbolTable table, String functionName, String type) throws Exception {
+	if(type.contains("[]")){
+		if(children == null || children.length == 0)
+			return type;
+
+		SimpleNode n = (SimpleNode) children[0];
+
+		String childrenType;
+
+		if((childrenType = n.semanticAnalysis(table,functionName)).equals("[]"))
+			return type;	
+
+		return childrenType;
+	}
+
+	return type;
+  }
   
   public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
-	if(Character.isDigit(identifier.charAt(0))) {
-		if(children.length != 0)
-			throw new Exception("Expression found after IntegerLiteral '" + identifier + "'.");
-
+	super.semanticAnalysis(table, functionName);
+	
+	if(Character.isDigit(identifier.charAt(0)))
 		return "int";
-	}	
 
-	if(identifier.equals("true") || identifier.equals("false")) {
-		if(children.length != 0)
-			throw new Exception("Expression found after '" + identifier + "'.");
-
+	if(identifier.equals("true") || identifier.equals("false"))
 		return "boolean";
-	}
 
-	if(identifier.equals("this")) {
-		if(children.length != 0)
-			throw new Exception("Expression found after 'this'.");
-
+	if(identifier.equals("this"))
 		return table.className;
-	}
 
 	if(identifier.equals("!")) {
-		if(children.length != 1)
-			throw new Exception("1 Expression expected after '!'." + children.length + " found.");
-
 		SimpleNode n = (SimpleNode) children[0];
 
 		if(n.semanticAnalysis(table,functionName) != "boolean")
@@ -51,48 +56,76 @@ class ASTLiteral extends SimpleNode {
 	}
 
 	if(identifier.equals("")) {
-		if(children.length != 1)
-			throw new Exception("Expression expected inside '()'." + children.length + " found.");
-
 		SimpleNode n = (SimpleNode) children[0];
 
 		return n.semanticAnalysis(table,functionName);
 	}
 
 	if(identifier.equals("new int[...]")) {
-		if(children.length != 1)
-			throw new Exception("Expression expected inside '()'." + children.length + " found.");
-
-			SimpleNode n = (SimpleNode) children[0];
+		SimpleNode n = (SimpleNode) children[0];
 
 		if(n.semanticAnalysis(table,functionName) != "int")
-			throw new Exception("Integer Expression expected after '!'.");
+			throw new Exception("Integer Expression expected inside [].");
 			
-			return "int[]";
+		return "int[]";
 	}
 
-	else if(identifier.substring(0,3).equals("new")) {
-		if(children.length != 0)
-			throw new Exception("Expression found after 'new " + identifier + "()'.");
-
+	else if(identifier.length() >= 3 && identifier.substring(0,3).equals("new")) {
 		return identifier.substring(4);
 	}
 
 	if(functionName != null) {
-		if(table.functions.get(functionName).locals.contains(identifier))
-			return table.functions.get(functionName).locals.get(identifier).type;
-
-		if(table.functions.get(functionName).params.contains(identifier))
-			return table.functions.get(functionName).params.get(identifier).type;
+		if(table.functions.get(functionName).locals.containsKey(identifier))
+			return analyseVariables(table,functionName,table.functions.get(functionName).locals.get(identifier).type);
+			
+		if(table.functions.get(functionName).params.containsKey(identifier))
+			return analyseVariables(table,functionName,table.functions.get(functionName).params.get(identifier).type);
 	}
 
-	if(table.symbols.contains(identifier))
-		return table.symbols.get(identifier).type;
+	if(table.symbols.containsKey(identifier))
+		return analyseVariables(table,functionName,table.symbols.get(identifier).type);
 
-	if(table.functions.contains(identifier))
-		return table.functions.get(identifier).returnType;
+	if(table.functions.containsKey(identifier))
+		return analyseVariables(table,functionName,table.functions.get(identifier).returnType);
 
 	throw new Exception("Identifier '" + identifier + "' not found.");
+  }
+
+  boolean isArray(SymbolTable table, String functionName) throws Exception{
+	if(Character.isDigit(identifier.charAt(0)))
+		return false;
+
+	if(identifier.equals("true") || identifier.equals("false") || identifier.equals("this") || identifier.equals("!"))
+		return false;
+
+	if(identifier.equals("new int[...]"))
+		return true;
+
+	if(identifier.length() >= 3 && identifier.substring(0,3).equals("new"))
+		return false;
+
+	if(identifier.equals("")) {
+		SimpleNode n = (SimpleNode) children[0];
+
+		return n.semanticAnalysis(table,functionName).contains("[]");
+	}
+
+	if(functionName != null) {
+		if(table.functions.get(functionName).locals.containsKey(identifier))
+			return table.functions.get(functionName).locals.get(identifier).type.contains("[]");
+			
+		if(table.functions.get(functionName).params.containsKey(identifier))
+			return table.functions.get(functionName).params.get(identifier).type.contains("[]");
+	}
+
+	if(table.symbols.containsKey(identifier))
+		return table.symbols.get(identifier).type.contains("[]");
+
+	if(table.functions.containsKey(identifier))
+		return table.functions.get(identifier).returnType.contains("[]");
+
+
+	return false;	
   }
   
 }
