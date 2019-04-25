@@ -88,7 +88,15 @@ class ASTLiteral extends SimpleNode {
 	if(table.functions.containsKey(identifier))
 		return analyseVariables(table,functionName,table.functions.get(identifier).returnType);
 
-	throw new Exception("Identifier '" + identifier + "' not found.");
+	if(children == null || children.length == 0 || !(children[0] instanceof ASTOtherLiteral)) 
+		throw new Exception("Identifier '" + identifier + "' not found.");
+
+	ASTOtherLiteral other_literal = (ASTOtherLiteral) children[0];
+
+	if(!other_literal.type.equals("call"))
+		throw new Exception("Identifier '" + identifier + "' not found.");
+
+	return identifier;
   }
 
   boolean isArray(SymbolTable table, String functionName) throws Exception{

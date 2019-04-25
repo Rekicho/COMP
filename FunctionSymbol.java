@@ -3,7 +3,7 @@ import java.util.Enumeration;
 
 public class FunctionSymbol {
 	String returnType;
-	Hashtable<String, Symbol> params = new Hashtable<>();
+	LinkedHashMap<String, Symbol> params = new LinkedHashMap<>();
 	Hashtable<String, Symbol> locals = new Hashtable<>();
 
 	public FunctionSymbol(String returnType) {

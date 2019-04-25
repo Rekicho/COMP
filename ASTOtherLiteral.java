@@ -25,6 +25,8 @@ class ASTOtherLiteral extends SimpleNode {
   }
 
   public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+		super.semanticAnalysis(table, functionName);
+
 	if(!(parent instanceof ASTLiteral))
 		throw new Exception("Expression " + ((ASTOtherLiteral) parent).type + "found before expression");
 
@@ -49,6 +51,7 @@ class ASTOtherLiteral extends SimpleNode {
 				return "int";
 
 		// case "call": 
+
 	}
 			
 	return "";

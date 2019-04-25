@@ -32,7 +32,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 		try{
 			SymbolTable ST = new SymbolTable(root);
 			//ST.dump();
-			root.semanticAnalysis(ST,null);
+			root.semanticAnalysis(ST,null); //TODO - TRY CATCH EM TODOS OS NODES PARA VER VARIOS ERROS.
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
