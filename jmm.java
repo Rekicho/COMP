@@ -215,6 +215,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			try {
 				Type();
 				t = jj_consume_token(IDENTIFIER);
+				jjtn000.lineNumber = t.beginLine;
 				jj_consume_token(SEMICOLON);
 				jjtn000.name = t.image;
 			} catch (Exception e) {
@@ -255,12 +256,12 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 		ASTMainDeclaration jjtn000 = new ASTMainDeclaration(JJTMAINDECLARATION);
 		boolean jjtc000 = true;
 		jjtree.openNodeScope(jjtn000);
-		Token t;
+		Token t, t1;
 		try {
 			try {
 				jj_consume_token(STATIC);
 				jj_consume_token(VOID);
-				jj_consume_token(MAIN);
+				t1 = jj_consume_token(MAIN);
 				jj_consume_token(LPAREN);
 				jj_consume_token(STRING);
 				jj_consume_token(LBRACKET);
@@ -269,6 +270,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 				jj_consume_token(RPAREN);
 				jj_consume_token(LBRACE);
 				jjtn000.args = t.image;
+				jjtn000.lineNumber = t1.beginLine;
 				label_3: while (true) {
 					if (jj_2_1(2)) {
 						;
@@ -329,6 +331,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			try {
 				Type();
 				t = jj_consume_token(IDENTIFIER);
+				jjtn000.lineNumber = t.beginLine;
 				jjtn000.name = t.image;
 				jj_consume_token(LPAREN);
 				switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
@@ -453,6 +456,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 		try {
 			Type();
 			t = jj_consume_token(IDENTIFIER);
+			jjtn000.lineNumber = t.beginLine;
 			jjtree.closeNodeScope(jjtn000, true);
 			jjtc000 = false;
 			jjtn000.name = t.image;
@@ -716,8 +720,9 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 				} else {
 					break label_9;
 				}
-				jj_consume_token(SC_AND);
+				Token t = jj_consume_token(SC_AND);
 				ASTAND jjtn001 = new ASTAND(JJTAND);
+				jjtn001.lineNumber = t.beginLine;
 				boolean jjtc001 = true;
 				jjtree.openNodeScope(jjtn001);
 				try {
@@ -765,8 +770,9 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			} else {
 				break label_10;
 			}
-			jj_consume_token(LT);
+			Token t = jj_consume_token(LT);
 			ASTLESS jjtn001 = new ASTLESS(JJTLESS);
+			jjtn001.lineNumber = t.beginLine;
 			boolean jjtc001 = true;
 			jjtree.openNodeScope(jjtn001);
 			try {
@@ -810,10 +816,12 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			} else {
 				break label_11;
 			}
+			Token t;
 			switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
 			case PLUS: {
-				jj_consume_token(PLUS);
+				 t = jj_consume_token(PLUS);
 				ASTADD jjtn001 = new ASTADD(JJTADD);
+				jjtn001.lineNumber = t.beginLine;
 				boolean jjtc001 = true;
 				jjtree.openNodeScope(jjtn001);
 				try {
@@ -849,9 +857,10 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 				break;
 			}
 			case MINUS: {
-				jj_consume_token(MINUS);
+				t = jj_consume_token(MINUS);
 				ASTSUB jjtn002 = new ASTSUB(JJTSUB);
 				boolean jjtc002 = true;
+				jjtn002.lineNumber = t.beginLine;
 				jjtree.openNodeScope(jjtn002);
 				try {
 					Mult();
@@ -903,8 +912,9 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			}
 			switch ((jj_ntk == -1) ? jj_ntk_f() : jj_ntk) {
 			case STAR: {
-				jj_consume_token(STAR);
+				Token t = jj_consume_token(STAR);
 				ASTMULT jjtn001 = new ASTMULT(JJTMULT);
+				jjtn001.lineNumber = t.beginLine;
 				boolean jjtc001 = true;
 				jjtree.openNodeScope(jjtn001);
 				try {
@@ -940,8 +950,9 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 				break;
 			}
 			case SLASH: {
-				jj_consume_token(SLASH);
+				Token t = jj_consume_token(SLASH);
 				ASTDIV jjtn002 = new ASTDIV(JJTDIV);
+				jjtn002.lineNumber = t.beginLine;
 				boolean jjtc002 = true;
 				jjtree.openNodeScope(jjtn002);
 				try {
@@ -997,6 +1008,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 				jjtree.closeNodeScope(jjtn000, true);
 				jjtc000 = false;
 				jjtn000.identifier = t.image;
+				jjtn000.lineNumber = t.beginLine;
 				break;
 			}
 			case TRUE: {

@@ -21,7 +21,7 @@ public class ASTVarDeclaration extends SimpleNode {
 		
 		if(functionName == null) {
 			if(table.symbols.get(name) != null)
-				throw new Exception("Class local " + name + " declared more than once.");
+				throw new Exception("Line " + lineNumber + ": Class local " + name + " declared more than once.");
 
 			table.symbols.put(name,symbol);
 		}
@@ -29,7 +29,7 @@ public class ASTVarDeclaration extends SimpleNode {
 
 		else {			
 			if(table.functions.get(functionName).locals.get(name) != null || table.functions.get(functionName).params.get(name) != null)
-				throw new Exception("Function " + functionName + " local " + name + " declared more than once.");
+				throw new Exception("Line " + lineNumber + ": Function " + functionName + " local " + name + " declared more than once.");
 
 			table.functions.get(functionName).locals.put(name,symbol);
 		}

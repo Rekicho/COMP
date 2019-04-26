@@ -24,7 +24,7 @@ class ASTADD extends SimpleNode {
 				type = n.semanticAnalysis(table,functionName);
 
 				if(!type.equals("int"))
-					throw new Exception("+ expected integer but found " + type);
+					throw new Exception("Line "+ lineNumber +": + expected integer but found " + type);
 			}
 		}
 	}

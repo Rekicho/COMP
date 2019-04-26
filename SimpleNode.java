@@ -9,6 +9,7 @@ public class SimpleNode implements Node {
 	protected int id;
 	protected Object value;
 	protected jmm parser;
+	int lineNumber;
 
 	public SimpleNode(int i) {
 		id = i;

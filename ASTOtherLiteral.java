@@ -61,21 +61,32 @@ class ASTOtherLiteral extends SimpleNode {
 				Iterator<String> it = keys.iterator();
 				int i = 0;
 
-				ASTMethodParams methodParams = (ASTMethodParams) children[0];
-
-				String[] params = methodParams.getParams(table, functionName);
-
-				for (; i < params.length && it.hasNext(); ++i) {
-					String key = (String) it.next();
-					Symbol value = (Symbol) table.functions.get(identifier).params.get(key);
-
-					if(!params[i].equals(value.type))
-						throw new Exception("Function call " + identifier + " parameter " + i + " expected: " + value.type + " found: " + params[i] + ".");
+				if(children == null || children.length == 0)
+				{
+					if(keys.size() != 0)
+						throw new Exception("Function call " + identifier + " expected " + keys.size() + " parameters but found 0.");
 				}
 
-				if(i < params.length || it.hasNext())
-					throw new Exception("Function call " + identifier + " expected " + keys.size() + " parameters but found " + params.length + ".");
-					
+
+
+				else {
+					ASTMethodParams methodParams = (ASTMethodParams) children[0];
+
+					String[] params = methodParams.getParams(table, functionName);
+
+					for (; i < params.length && it.hasNext(); ++i) {
+						String key = (String) it.next();
+						Symbol value = (Symbol) table.functions.get(identifier).params.get(key);
+
+						if(!params[i].equals(value.type))
+							throw new Exception("Function call " + identifier + " parameter " + i + " expected: " + value.type + " found: " + params[i] + ".");
+					}
+
+					if(i < params.length || it.hasNext())
+						throw new Exception("Function call " + identifier + " expected " + keys.size() + " parameters but found " + params.length + ".");
+						
+				}
+			
 				return table.functions.get(identifier).returnType;
 	}
 			
