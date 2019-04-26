@@ -16,6 +16,34 @@ class ASTLiteral extends SimpleNode {
 	return "Expression: " + identifier;
   }
 
+  public void fixMethodCalls() {
+		if(children == null)
+			return;
+
+		for (int i = 0; i < children.length; ++i) {
+			SimpleNode n = (SimpleNode) children[i];
+			if (n != null) {
+				n.fixMethodCalls();
+			}
+		}
+
+		if(children.length != 2)
+			return;
+
+		ASTOtherLiteral other_literal = (ASTOtherLiteral)children[1];
+
+		if(!other_literal.type.equals("call"))
+			return;
+		
+		children[0].jjtSetParent(children[1]);
+		children[1].jjtAddChild(children[0],0);
+
+		Node temp = children[1];
+		children = new Node[1];
+		children[0] = temp;
+	}
+
+
   public String analyseVariables(SymbolTable table, String functionName, String type) throws Exception {
 	if(type.contains("[]")){
 		if(children == null || children.length == 0)
@@ -53,8 +81,13 @@ class ASTLiteral extends SimpleNode {
 	{
 		if(functionName != null && functionName.equals("main"))
 			throw new Exception("this cannot be used in a static function");
-		
-		return table.className;
+
+		if(children == null || children.length == 0)
+			return table.className;
+
+		SimpleNode n = (SimpleNode) children[0];
+
+		return n.semanticAnalysis(table,functionName);
 	}
 
 	if(identifier.equals("!")) {
@@ -84,8 +117,6 @@ class ASTLiteral extends SimpleNode {
 	else if(identifier.length() >= 3 && identifier.substring(0,3).equals("new")) {
 		if(children == null || children.length == 0)
 			return identifier.substring(4);
-
-		System.out.println("xxx");
 
 		SimpleNode n = (SimpleNode) children[0];
 

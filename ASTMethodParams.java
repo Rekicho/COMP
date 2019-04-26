@@ -10,5 +10,16 @@ class ASTMethodParams extends SimpleNode {
     super(p, id);
   }
 
+  public String[] getParams(SymbolTable table, String functionName) throws Exception {
+      String[] res = new String[children.length];
+
+      for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				res[i] = n.semanticAnalysis(table,functionName);
+			}
+
+      return res;
+  }
+
 }
 /* JavaCC - OriginalChecksum=0d0f34f346a0ba514d6b41b522453a82 (do not edit this line) */

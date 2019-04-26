@@ -96,6 +96,17 @@ public class SimpleNode implements Node {
 		return id;
 	}
 
+	public void fixMethodCalls() {
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					n.fixMethodCalls();
+				}
+			}
+		}
+	}
+
 	public void buildST(SymbolTable table, String functionName) throws Exception {
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {

@@ -27,6 +27,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 		jmm myjmm = new jmm(file);
 		SimpleNode root = myjmm.Program(); // devolve referência para o nó raiz da árvore
+		root.fixMethodCalls();
 		//root.dump(""); // imprime no ecrã a árvore
 
 		try{

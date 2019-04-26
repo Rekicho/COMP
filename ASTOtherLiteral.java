@@ -54,29 +54,29 @@ class ASTOtherLiteral extends SimpleNode {
 				return "int";
 
 		case "call":
-				if(table.functions.get(literal.identifier) == null)
+				if(table.functions.get(identifier) == null)
 					return "";
 
-				Set<String> keys = table.functions.get(literal.identifier).params.keySet();
+				Set<String> keys = table.functions.get(identifier).params.keySet();
 				Iterator<String> it = keys.iterator();
 				int i = 0;
 
-				if (children != null) {
-					for (; i < children.length && it.hasNext(); ++i) {
-						SimpleNode nn = (SimpleNode) children[i];
-						String key = (String) it.next();
-						Symbol value = (Symbol) table.functions.get(literal.identifier).params.get(key);
-						String childType = nn.semanticAnalysis(table,functionName);
+				ASTMethodParams methodParams = (ASTMethodParams) children[0];
 
-						if(!childType.equals(value.type))
-							throw new Exception("Function call " + literal.identifier + " parameter " + i + " expected: " + value.type + " found: " + childType + ".");
-					}
+				String[] params = methodParams.getParams(table, functionName);
+
+				for (; i < params.length && it.hasNext(); ++i) {
+					String key = (String) it.next();
+					Symbol value = (Symbol) table.functions.get(identifier).params.get(key);
+
+					if(!params[i].equals(value.type))
+						throw new Exception("Function call " + identifier + " parameter " + i + " expected: " + value.type + " found: " + params[i] + ".");
 				}
 
-				if(i < children.length || it.hasNext())
-					throw new Exception("Function call " + literal.identifier + " expected " + keys.size() + " parameters but found " + children.length + ".");
+				if(i < params.length || it.hasNext())
+					throw new Exception("Function call " + identifier + " expected " + keys.size() + " parameters but found " + params.length + ".");
 					
-				return table.functions.get(literal.identifier).returnType;
+				return table.functions.get(identifier).returnType;
 	}
 			
 	return "";
