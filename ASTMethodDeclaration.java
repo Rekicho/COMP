@@ -30,7 +30,12 @@ public class ASTMethodDeclaration extends SimpleNode {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
 				if (n != null) {
-					n.buildST(table, name);
+					try{
+						n.buildST(table, name);
+					}
+					catch(Exception e){
+						System.out.println(e.getMessage());
+					}
 				}
 			}
 		}
@@ -41,7 +46,12 @@ public class ASTMethodDeclaration extends SimpleNode {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
 				if (n != null) {
-					n.semanticAnalysis(table,name);
+					try{
+						n.semanticAnalysis(table, name);
+					  }  
+					  catch(Exception e){
+						System.out.println(e.getMessage());
+					  }
 				}
 			}
 		}

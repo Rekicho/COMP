@@ -31,7 +31,12 @@ class ASTMainDeclaration extends SimpleNode {
 		for (int i = 0; i < children.length; ++i) {
 			SimpleNode n = (SimpleNode) children[i];
 			if (n != null) {
-				n.buildST(table, "main");
+				try{
+					n.buildST(table, "main");
+				}
+				catch(Exception e){
+					System.out.println(e.getMessage());
+				}
 			}
 		}
 	}
@@ -42,7 +47,12 @@ class ASTMainDeclaration extends SimpleNode {
 		for (int i = 0; i < children.length; ++i) {
 			SimpleNode n = (SimpleNode) children[i];
 			if (n != null) {
-				n.semanticAnalysis(table,"main");
+				try{
+					n.semanticAnalysis(table,"main");
+				}  
+				catch(Exception e){
+					System.out.println(e.getMessage());
+				}
 			}
 		}
 	}

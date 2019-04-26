@@ -25,10 +25,33 @@ class ASTClassDeclaration extends SimpleNode {
 		for (int i = 0; i < children.length; ++i) {
 			SimpleNode n = (SimpleNode) children[i];
 			if (n != null) {
-				n.buildST(table,functionName);
+				try{
+          n.buildST(table, functionName);
+        }
+        catch(Exception e){
+          System.out.println(e.getMessage());
+        }
 			}
 		}
 	}
+  }
+  
+  public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+          try{
+            n.semanticAnalysis(table,functionName);
+          }  
+          catch(Exception e){
+            System.out.println(e.getMessage());
+          }
+				}
+			}
+		}
+
+		return "";
 	}
 }
 /* JavaCC - OriginalChecksum=accd6c615f837a4f4156eee86c99e791 (do not edit this line) */
