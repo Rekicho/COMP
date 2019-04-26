@@ -36,6 +36,12 @@ class ASTLiteral extends SimpleNode {
   
   public String semanticAnalysis(SymbolTable table, String functionName) throws Exception {
 	super.semanticAnalysis(table, functionName);
+
+	if(identifier.length() == 0)
+	{
+		SimpleNode n = (SimpleNode) children[0];
+		return n.semanticAnalysis(table,functionName);
+	}
 	
 	if(Character.isDigit(identifier.charAt(0)))
 		return "int";
@@ -44,7 +50,12 @@ class ASTLiteral extends SimpleNode {
 		return "boolean";
 
 	if(identifier.equals("this"))
+	{
+		if(functionName != null && functionName.equals("main"))
+			throw new Exception("this cannot be used in a static function");
+		
 		return table.className;
+	}
 
 	if(identifier.equals("!")) {
 		SimpleNode n = (SimpleNode) children[0];
@@ -71,7 +82,14 @@ class ASTLiteral extends SimpleNode {
 	}
 
 	else if(identifier.length() >= 3 && identifier.substring(0,3).equals("new")) {
-		return identifier.substring(4);
+		if(children == null || children.length == 0)
+			return identifier.substring(4);
+
+		System.out.println("xxx");
+
+		SimpleNode n = (SimpleNode) children[0];
+
+		return n.semanticAnalysis(table,functionName);
 	}
 
 	if(functionName != null) {
@@ -85,9 +103,6 @@ class ASTLiteral extends SimpleNode {
 	if(table.symbols.containsKey(identifier))
 		return analyseVariables(table,functionName,table.symbols.get(identifier).type);
 
-	if(table.functions.containsKey(identifier))
-		return analyseVariables(table,functionName,table.functions.get(identifier).returnType);
-
 	if(children == null || children.length == 0 || !(children[0] instanceof ASTOtherLiteral)) 
 		throw new Exception("Identifier '" + identifier + "' not found.");
 
@@ -96,7 +111,7 @@ class ASTLiteral extends SimpleNode {
 	if(!other_literal.type.equals("call"))
 		throw new Exception("Identifier '" + identifier + "' not found.");
 
-	return identifier;
+	return other_literal.semanticAnalysis(table, functionName);
   }
 
   boolean isArray(SymbolTable table, String functionName) throws Exception{

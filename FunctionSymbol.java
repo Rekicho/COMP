@@ -1,5 +1,8 @@
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Enumeration;
+import java.util.Set;
 
 public class FunctionSymbol {
 	String returnType;
@@ -11,14 +14,16 @@ public class FunctionSymbol {
 	}
 
 	public void dump() {
-		Enumeration<String> t = params.keys();
+		Set<String> keys = params.keySet();
+		Iterator<String> it = keys.iterator();
+
 		String key;
 		Symbol value;
 
 		System.out.println("\t\t\tParameters:");
 
-		while (t.hasMoreElements() == true) {
-			key = (String) t.nextElement();
+		while (it.hasNext() == true) {
+			key = (String) it.next();
 			value = (Symbol) params.get(key);
 			System.out.println("\t\t\t\t" + key);
 			if (value.type != null)
@@ -29,7 +34,7 @@ public class FunctionSymbol {
 
 		System.out.println("\t\t\tLocals:");
 
-		t = locals.keys();
+		Enumeration<String> t = locals.keys();
 
 		while (t.hasMoreElements() == true) {
 			key = (String) t.nextElement();

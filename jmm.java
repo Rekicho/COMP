@@ -35,6 +35,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			root.semanticAnalysis(ST,null); //TODO - TRY CATCH EM TODOS OS NODES PARA VER VARIOS ERROS.
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			//e.printStackTrace();
 		}
 	}
 
