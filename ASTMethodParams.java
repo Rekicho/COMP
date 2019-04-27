@@ -21,5 +21,15 @@ class ASTMethodParams extends SimpleNode {
       return res;
   }
 
+  public void generateCode(StringBuilder builder, SymbolTable ST) {
+    ASTOtherLiteral parentNode = (ASTOtherLiteral) parent;
+    if (parentNode.identifier.equals("call")) {
+			if (children != null) {
+				for (int i = 0; i < children.length; i++) {
+          ((SimpleNode) children[i]).generateCode(builder, ST);
+				}
+			}
+		}
+	}  
 }
 /* JavaCC - OriginalChecksum=0d0f34f346a0ba514d6b41b522453a82 (do not edit this line) */

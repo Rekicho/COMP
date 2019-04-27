@@ -11,6 +11,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 		System.out.println("Usage:  ");
 		System.out.println("       java jmm <input_file.jmm>");
 	}
+
 	public static void main(String args[]) throws ParseException {
 		if (args.length != 1) {
 			printUsage();
@@ -32,11 +33,14 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 		try{
 			SymbolTable ST = new SymbolTable(root);
-			//ST.dump();
-			root.semanticAnalysis(ST,null);
+			// ST.dump();
+			root.semanticAnalysis(ST, null);
+			StringBuilder builder = new StringBuilder();
+			root.generateCode(builder, ST);
+			System.out.println(builder.toString());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
