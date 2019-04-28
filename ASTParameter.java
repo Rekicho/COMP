@@ -23,7 +23,8 @@ class ASTParameter extends SimpleNode {
 	if(table.functions.get(functionName).params.get(name) != null || table.functions.get(functionName).locals.get(name) != null)
 		throw new Exception("Function " + functionName + " parameter " + name + " declared more than once.");
 	
-	table.functions.get(functionName).params.put(name, symbol);
+  table.functions.get(functionName).params.put(name, symbol);
+    symbol.order = table.functions.get(functionName).params.size() + table.functions.get(functionName).locals.size() - 1;
   }
 }
 /* JavaCC - OriginalChecksum=7286d9338b7f7138e7c6c36551a2771c (do not edit this line) */

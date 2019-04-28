@@ -29,14 +29,17 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 		jmm myjmm = new jmm(file);
 		SimpleNode root = myjmm.Program(); // devolve referência para o nó raiz da árvore
 		root.fixMethodCalls();
-		//root.dump(""); // imprime no ecrã a árvore
+		System.out.println("==========AST==========");
+		root.dump(""); // imprime no ecrã a árvore
 
 		try{
 			SymbolTable ST = new SymbolTable(root);
-			// ST.dump();
+			System.out.println("==========Symbol Table==========");
+			ST.dump();
 			root.semanticAnalysis(ST, null);
 			StringBuilder builder = new StringBuilder();
-			root.generateCode(builder, ST);
+			root.generateCode(builder, ST, null);
+			System.out.println("==========Code==========");
 			System.out.println(builder.toString());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

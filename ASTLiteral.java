@@ -180,17 +180,13 @@ public class ASTLiteral extends SimpleNode {
 		return false;
 	}
 
-	public void generateCode(StringBuilder builder, SymbolTable ST) {
-
-		super.generateCode(builder, ST);
-
-		//System.out.println(identifier);
-		if(identifier.equals(""))
+	public void generateFunctionCode(StringBuilder builder, SymbolTable ST, String functionName) {		
+		if(children != null || identifier.equals("")) {
+			((SimpleNode) children[0]).generateCode(builder, ST, functionName);
 			return;
+		}
 
 		if (Character.isDigit(identifier.charAt(0))) {
-
-			//System.out.println(identifier);
 			int value = Integer.parseInt(identifier);
 
 			if (value >= 0 && value <= 5) {
@@ -204,11 +200,35 @@ public class ASTLiteral extends SimpleNode {
 			} else {
 				builder.append("ldc " + value);
 			}
-
-			builder.append('\n');
 		}
-	}
+		else if(identifier.equals("true")){
+			builder.append("iconst_" + 1);
+		}
+		else if(identifier.equals("false")){
+			builder.append("iconst_" + 0);
+		}
+		else{
+			Symbol symbol;
+			if((symbol = ST.symbols.get(identifier)) != null) {
+				if(symbol.type.equals("boolean"))
+					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "Z" );
 
+				else if(symbol.type.equals("int"))
+					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "I" );
+
+				else builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "L" );
+			}
+			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
+				builder.append("iload_" + symbol.order);
+			} else {
+				symbol = ST.functions.get(functionName).locals.get(identifier);
+				if(symbol != null)
+					builder.append("iload_" + symbol.order);
+			}
+		}
+
+		builder.append("\n");
+	}
 }
 /*
  * JavaCC - OriginalChecksum=a8d48e9a57e0088d4ff5320e922f78d0 (do not edit this

@@ -58,7 +58,18 @@ class ASTMainDeclaration extends SimpleNode {
 	}
 
 	return "";
-  }
+	}
+	
+	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					n.generateCode(builder,ST,"main");
+				}
+			}
+		}
+	}
 
 }
 /* JavaCC - OriginalChecksum=0c5227e4bd79d47833b58d1707cedc06 (do not edit this line) */
