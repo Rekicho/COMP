@@ -94,6 +94,59 @@ public class ASTOtherLiteral extends SimpleNode {
 
 		return "";
 	}
+
+	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		if(children != null) {
+			((ASTMethodParams) children[0]).generateCode(builder,ST,functionName);
+			return;
+		}
+		
+		ASTLiteral parentNode = (ASTLiteral) parent;
+
+		if(!type.equals("call"))
+			return;
+
+		builder.append("--call:" + parentNode.identifier + "." + identifier + "--\n");
+
+		if(parentNode.identifier.equals("this")) {
+			builder.append("aload_0\n");
+		}
+
+		else if(parentNode.identifier.contains("new")) {
+			String className = parentNode.identifier.split("new ")[1];
+	
+			builder.append("new " + className + "\ndup\ninvokespecial " + className + "/<init>()V\n");
+		}
+
+		else builder.append("getstatic java/lang/" + parentNode.identifier + "/" + identifier + " V;\n");
+
+		if(parentNode.identifier.equals("this") || parentNode.identifier.equals("new " + ST.className)) {
+        builder.append("invokevirtual " + ST.className + "/" + identifier + "()");
+
+		if(ST.functions.get(identifier).returnType.equals("boolean"))
+			builder.append("Zboolean");
+
+		else if(ST.functions.get(identifier).returnType.equals("int"))
+			builder.append("Iint" );
+
+        else if(ST.functions.get(identifier).returnType.equals(ST.className))
+          builder.append("L" + ST.className);
+
+        else builder.append("Ljava/lang/" + identifier);
+
+        builder.append(";\n");
+      }
+
+      else {
+        if(parentNode.identifier.contains("new ")) {
+          String function = parentNode.identifier.split("new ")[1];
+          builder.append("invokevirtual " + function + "/" + identifier + "(");
+        }
+          
+
+        else builder.append("invokestatic java/lang/" + parentNode.identifier + "/" + identifier + "()V;");
+      }
+    }
 }
 /*
  * JavaCC - OriginalChecksum=6a67081bb7fb5f77aa5f878ca7d3dcab (do not edit this

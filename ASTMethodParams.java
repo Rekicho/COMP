@@ -25,7 +25,10 @@ class ASTMethodParams extends SimpleNode {
 
   public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
     ASTOtherLiteral parentNode = (ASTOtherLiteral) parent;
-    ASTLiteral parentparentNode = (ASTLiteral) parentNode.parent;
+	ASTLiteral parentparentNode = (ASTLiteral) parentNode.parent;
+
+	builder.append("--call:" + parentparentNode.identifier + "." + parentNode.identifier + "--\n");
+
     if (parentNode.type.equals("call")) {
       if(parentparentNode.identifier.equals("this")) {
         builder.append("aload_0\n");

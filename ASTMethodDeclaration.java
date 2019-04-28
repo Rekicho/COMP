@@ -60,6 +60,7 @@ public class ASTMethodDeclaration extends SimpleNode {
 	}
 
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		builder.append("---" + name + ":---\n");
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];

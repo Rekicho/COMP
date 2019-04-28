@@ -26,6 +26,7 @@ class ASTMainDeclaration extends SimpleNode {
 
 	Symbol mainSymbol = new Symbol("String[]", args);
 	functionSymbol.params.put(args,mainSymbol);
+	mainSymbol.order = 0;
 	
 	if (children != null) {
 		for (int i = 0; i < children.length; ++i) {
@@ -61,6 +62,7 @@ class ASTMainDeclaration extends SimpleNode {
 	}
 	
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		builder.append("---Main:---\n");
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
