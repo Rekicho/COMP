@@ -28,7 +28,7 @@ class ASTMethodParams extends SimpleNode {
 	ASTLiteral parentparentNode = (ASTLiteral) parentNode.parent;
 
     if (parentNode.type.equals("call")) {
-		builder.append("--call:" + parentparentNode.identifier + "." + parentNode.identifier + "--\n");
+		builder.append(";; call:" + parentparentNode.identifier + "." + parentNode.identifier + " ;;\n");
 
 		Symbol symbol = null;
 

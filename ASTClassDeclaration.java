@@ -53,5 +53,32 @@ class ASTClassDeclaration extends SimpleNode {
 
 		return "";
 	}
+
+	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		builder.append(".class public " + class_name + "\n.super ");
+
+		if(extends_class.equals(""))
+			builder.append(extends_class + "\n");
+
+		else builder.append("java/lang/Object\n");
+
+		builder.append("\n; standard initializer\n.method public <init>()V\n aload_0\n\n");
+
+		if(extends_class.equals(""))
+			builder.append("invokenonvirtual " + extends_class + "/<init>()V\n");
+
+		else builder.append("invokenonvirtual java/lang/Object/<init>()V\n");
+
+		builder.append("return\n.end method\n\n");
+
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					n.generateCode(builder,ST,functionName);
+				}
+			}
+		}
+	}
 }
 /* JavaCC - OriginalChecksum=accd6c615f837a4f4156eee86c99e791 (do not edit this line) */

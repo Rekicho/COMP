@@ -106,7 +106,7 @@ public class ASTOtherLiteral extends SimpleNode {
 		if(!type.equals("call"))
 			return;
 
-		builder.append("--call:" + parentNode.identifier + "." + identifier + "--\n");
+		builder.append(";; call:" + parentNode.identifier + "." + identifier + " ;;\n");
 
 		Symbol symbol = null;
 

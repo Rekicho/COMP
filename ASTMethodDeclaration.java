@@ -60,7 +60,53 @@ public class ASTMethodDeclaration extends SimpleNode {
 	}
 
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
-		builder.append("---" + name + ":---\n");
+		builder.append(";;; " + name + ": ;;;\n");
+
+		builder.append(".method public " + name + "(");
+
+		if(children.length >= 2 && children[1] instanceof ASTParameters) {
+			String[] parameters = ((ASTParameters)children[1]).getParameters();
+
+			for(int i = 0; i < parameters.length; i++){
+				if(parameters[i].equals("boolean"))
+					builder.append("Z;");
+
+				else if(parameters[i].equals("int"))
+					builder.append("I;");
+
+				else if(parameters[i].equals("int[]"))
+					builder.append("[I;");
+
+				else if(parameters[i].equals(ST.className))
+				builder.append("L" + ST.className + ";");
+
+				else builder.append("Ljava/lang/" + parameters[i] + ";");
+			}
+		}
+
+		builder.append(")");
+
+		String returnType = ((ASTType) children[0]).name;
+
+		if(((ASTType) children[0]).isArray)
+			returnType += "[]";
+		
+		if(returnType.equals("boolean"))
+			builder.append("Z");
+
+		else if(returnType.equals("int"))
+			builder.append("I" );
+
+		else if(returnType.equals("int[]"))
+			builder.append("[I" );
+
+        else if(returnType.equals(ST.className))
+          builder.append("L" + ST.className);
+
+		else builder.append("Ljava/lang/" + returnType);
+
+		builder.append("\n\n");
+		
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
@@ -69,6 +115,8 @@ public class ASTMethodDeclaration extends SimpleNode {
 				}
 			}
 		}
+
+		builder.append(".end method\n");
 	}
 }
 /*

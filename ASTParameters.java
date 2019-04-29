@@ -10,5 +10,19 @@ class ASTParameters extends SimpleNode {
     super(p, id);
   }
 
+  public String[] getParameters() {
+	  String[] res = new String[children.length];
+
+	  for(int i = 0; i < children.length; i++) {
+		  ASTParameter parameter = (ASTParameter) children[i];
+		  ASTType type = (ASTType) parameter.children[0];
+		  res[i] = type.name;
+
+		  if(type.isArray)
+		  	res[i] += "[]";
+	  }
+
+	  return res;
+  }
 }
 /* JavaCC - OriginalChecksum=b49c5ca506c6a4e5c4eaaaeb3fecef9c (do not edit this line) */

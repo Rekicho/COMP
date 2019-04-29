@@ -33,7 +33,7 @@ class ASTMULT extends SimpleNode {
   }
 
   public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
-	builder.append("|||Line: " + lineNumber + "*|||\n");
+	builder.append(";;; Line: " + lineNumber + "* ;;;\n");
 	
 	((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
 	((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
