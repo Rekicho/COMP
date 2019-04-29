@@ -40,5 +40,9 @@ class ASTDIV extends SimpleNode {
 	builder.append("idiv\n");
   }
 
+  public void generateFunctionCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	  generateCode(builder,ST,functionName);
+  }
+
 }
 /* JavaCC - OriginalChecksum=7c3f486853a5965468791335eb31af69 (do not edit this line) */

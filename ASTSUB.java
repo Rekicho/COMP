@@ -39,5 +39,9 @@ class ASTSUB extends SimpleNode {
 	((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
 	builder.append("isub\n");
   }
+
+  public void generateFunctionCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	generateCode(builder,ST,functionName);
+}
 }
 /* JavaCC - OriginalChecksum=353cd3b7689ade7340f0274f1f92fac7 (do not edit this line) */

@@ -40,5 +40,9 @@ class ASTADD extends SimpleNode {
 	builder.append("iadd\n");
   }
 
+  public void generateFunctionCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	generateCode(builder,ST,functionName);
+}
+
 }
 /* JavaCC - OriginalChecksum=a27409a1dcc9e09ff4c35def8683db96 (do not edit this line) */
