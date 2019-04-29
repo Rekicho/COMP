@@ -18,13 +18,13 @@ public class ASTVarDeclaration extends SimpleNode {
 	public void buildST(SymbolTable table, String functionName) throws Exception {
 		ASTType type = (ASTType) children[0];
 		Symbol symbol = new Symbol(type.name,name);
+		if(type.isArray) symbol.type += "[]";
 		
 		if(functionName == null) {
 			if(table.symbols.get(name) != null)
 				throw new Exception("Line " + lineNumber + ": Class local " + name + " declared more than once.");
 
 			table.symbols.put(name,symbol);
-			symbol.order = table.symbols.size() - 1;
 		}
 			
 
@@ -33,7 +33,11 @@ public class ASTVarDeclaration extends SimpleNode {
 				throw new Exception("Line " + lineNumber + ": Function " + functionName + " local " + name + " declared more than once.");
 
 			table.functions.get(functionName).locals.put(name,symbol);
-			symbol.order = table.functions.get(functionName).locals.size() + table.functions.get(functionName).params.size() - 1;
+			symbol.order = table.functions.get(functionName).locals.size() + table.functions.get(functionName).params.size();
+
+			if(functionName.equals("main")) {
+				symbol.order++;
+			}
 		}
 	}
 

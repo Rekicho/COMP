@@ -27,12 +27,26 @@ class ASTMethodParams extends SimpleNode {
     ASTOtherLiteral parentNode = (ASTOtherLiteral) parent;
 	ASTLiteral parentparentNode = (ASTLiteral) parentNode.parent;
 
-	builder.append("--call:" + parentparentNode.identifier + "." + parentNode.identifier + "--\n");
-
     if (parentNode.type.equals("call")) {
+		builder.append("--call:" + parentparentNode.identifier + "." + parentNode.identifier + "--\n");
+
+		Symbol symbol = null;
+
       if(parentparentNode.identifier.equals("this")) {
         builder.append("aload_0\n");
-      }
+	  }
+
+		else if(functionName != null && (symbol = ST.functions.get(functionName).params.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+			builder.append("aload_" + symbol.order + "\n");
+		}
+
+		else if(functionName != null && (symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+			builder.append("aload_" + symbol.order + "\n");
+		}
+
+		else if((symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+			builder.append("aload_0\ngetfield " + ST.className + "/" + parentNode.identifier + "\n");
+		}
 
       else if(parentparentNode.identifier.contains("new")) {
         String className = parentparentNode.identifier.split("new ")[1];
@@ -42,13 +56,13 @@ class ASTMethodParams extends SimpleNode {
 
       else builder.append("getstatic java/lang/" + parentparentNode.identifier + "/" + parentNode.identifier + " V;\n");
 
-			if (children != null) {
-				for (int i = children.length - 1; i >= 0; i--) {
-          ((SimpleNode) children[i]).generateFunctionCode(builder, ST, functionName);
-				}
-      }
+		if (children != null) {
+			for (int i = children.length - 1; i >= 0; i--) {
+				((SimpleNode) children[i]).generateFunctionCode(builder, ST, functionName);
+			}
+		}
       
-      if(parentparentNode.identifier.equals("this") || parentparentNode.identifier.equals("new " + ST.className))
+      if(parentparentNode.identifier.equals("this") || parentparentNode.identifier.equals("new " + ST.className) || (symbol != null && symbol.type.equals(ST.className)))
 			{
         builder.append("invokevirtual " + ST.className + "/" + parentNode.identifier + "(");
 
@@ -61,12 +75,15 @@ class ASTMethodParams extends SimpleNode {
             builder.append("L" + type);
 
           else if(type.equals("boolean"))
-            builder.append("Zboolean");
+            builder.append("Z");
 
           else if(type.equals("int"))
-            builder.append("Iint");
+			builder.append("I");
+			
+		  else if(type.equals("int[]"))
+            builder.append("[I");
           
-          else builder.append("java/lang/" + type);
+          else builder.append("Ljava/lang/" + type);
 
           builder.append(";");
         }
@@ -74,10 +91,13 @@ class ASTMethodParams extends SimpleNode {
         builder.append(")");
 
 				if(ST.functions.get(parentNode.identifier).returnType.equals("boolean"))
-					builder.append("Zboolean");
+					builder.append("Z");
 
 				else if(ST.functions.get(parentNode.identifier).returnType.equals("int"))
-					builder.append("Iint" );
+					builder.append("I" );
+
+				else if(ST.functions.get(parentNode.identifier).returnType.equals("int"))
+					builder.append("[I" );
 
         else if(ST.functions.get(parentNode.identifier).returnType.equals(ST.className))
           builder.append("L" + ST.className);
@@ -100,10 +120,13 @@ class ASTMethodParams extends SimpleNode {
             String type = ((SimpleNode) children[i]).semanticAnalysis(ST, functionName);
 
             if(type.equals("boolean"))
-            builder.append("Zboolean");
+            builder.append("Z");
   
             else if(type.equals("int"))
-              builder.append("Iint" );
+			  builder.append("I" );
+			  
+			else if(type.equals("int[]"))
+              builder.append("[I" );
 
             else if(type.equals(ST.className))
               builder.append("L" + ST.className);

@@ -119,6 +119,13 @@ public class ASTLiteral extends SimpleNode {
 			return n.semanticAnalysis(table, functionName);
 		}
 
+		if(children != null && children[0] instanceof ASTOtherLiteral) {
+		ASTOtherLiteral other_literal = (ASTOtherLiteral) children[0];
+
+		if (other_literal.type.equals("call"))
+			return other_literal.semanticAnalysis(table, functionName);
+		}
+
 		if (functionName != null) {
 			if (table.functions.get(functionName).locals.containsKey(identifier))
 				return analyseVariables(table, functionName,
@@ -132,15 +139,7 @@ public class ASTLiteral extends SimpleNode {
 		if (table.symbols.containsKey(identifier))
 			return analyseVariables(table, functionName, table.symbols.get(identifier).type);
 
-		if (children == null || children.length == 0 || !(children[0] instanceof ASTOtherLiteral))
-			throw new Exception("Identifier '" + identifier + "' not found.");
-
-		ASTOtherLiteral other_literal = (ASTOtherLiteral) children[0];
-
-		if (!other_literal.type.equals("call"))
-			throw new Exception("Identifier '" + identifier + "' not found.");
-
-		return other_literal.semanticAnalysis(table, functionName);
+		throw new Exception("Identifier '" + identifier + "' not found.");
 	}
 
 	boolean isArray(SymbolTable table, String functionName) throws Exception {
@@ -162,7 +161,7 @@ public class ASTLiteral extends SimpleNode {
 
 			return n.semanticAnalysis(table, functionName).contains("[]");
 		}
-
+		
 		if (functionName != null) {
 			if (table.functions.get(functionName).locals.containsKey(identifier))
 				return table.functions.get(functionName).locals.get(identifier).type.contains("[]");
@@ -209,7 +208,13 @@ public class ASTLiteral extends SimpleNode {
 		}
 		else{
 			Symbol symbol;
-			if((symbol = ST.symbols.get(identifier)) != null) {
+			if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
+				builder.append("iload_" + symbol.order);
+			}
+			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
+				builder.append("iload_" + symbol.order);
+			}
+			else if((symbol = ST.symbols.get(identifier)) != null) {
 				if(symbol.type.equals("boolean"))
 					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "Z" );
 
@@ -217,14 +222,7 @@ public class ASTLiteral extends SimpleNode {
 					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "I" );
 
 				else builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "L" );
-			}
-			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
-				builder.append("iload_" + symbol.order);
-			} else {
-				symbol = ST.functions.get(functionName).locals.get(identifier);
-				if(symbol != null)
-					builder.append("iload_" + symbol.order);
-			}
+			} 
 		}
 
 		builder.append("\n");

@@ -42,7 +42,7 @@ public class ASTOtherLiteral extends SimpleNode {
 			if (!literal.isArray(table, functionName))
 				throw new Exception(literal.identifier + " is not an array.");
 
-			SimpleNode n = (SimpleNode) children[0];
+			SimpleNode n = (SimpleNode) ((SimpleNode)parent).children[0];
 
 			if (!n.semanticAnalysis(table, functionName).equals("int"))
 				throw new Exception("Integer Expression expected inside []");
@@ -108,8 +108,22 @@ public class ASTOtherLiteral extends SimpleNode {
 
 		builder.append("--call:" + parentNode.identifier + "." + identifier + "--\n");
 
+		Symbol symbol = null;
+
 		if(parentNode.identifier.equals("this")) {
 			builder.append("aload_0\n");
+		}
+
+		else if(functionName != null && (symbol = ST.functions.get(functionName).params.get(parentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+			builder.append("aload_" + symbol.order + "\n");
+		}
+
+		else if(functionName != null && (symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+			builder.append("aload_" + symbol.order + "\n");
+		}
+
+		else if((symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+			builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "\n");
 		}
 
 		else if(parentNode.identifier.contains("new")) {
@@ -120,14 +134,17 @@ public class ASTOtherLiteral extends SimpleNode {
 
 		else builder.append("getstatic java/lang/" + parentNode.identifier + "/" + identifier + " V;\n");
 
-		if(parentNode.identifier.equals("this") || parentNode.identifier.equals("new " + ST.className)) {
-        builder.append("invokevirtual " + ST.className + "/" + identifier + "()");
+		if(parentNode.identifier.equals("this") || parentNode.identifier.equals("new " + ST.className) || (symbol != null && symbol.type.equals(ST.className))) {
+        	builder.append("invokevirtual " + ST.className + "/" + identifier + "()");
 
 		if(ST.functions.get(identifier).returnType.equals("boolean"))
-			builder.append("Zboolean");
+			builder.append("Z");
 
 		else if(ST.functions.get(identifier).returnType.equals("int"))
-			builder.append("Iint" );
+			builder.append("I" );
+
+		else if(ST.functions.get(identifier).returnType.equals("int[]"))
+			builder.append("[I" );
 
         else if(ST.functions.get(identifier).returnType.equals(ST.className))
           builder.append("L" + ST.className);
@@ -140,11 +157,10 @@ public class ASTOtherLiteral extends SimpleNode {
       else {
         if(parentNode.identifier.contains("new ")) {
           String function = parentNode.identifier.split("new ")[1];
-          builder.append("invokevirtual " + function + "/" + identifier + "(");
+          builder.append("invokevirtual " + function + "/" + identifier + "()V;\n");
         }
           
-
-        else builder.append("invokestatic java/lang/" + parentNode.identifier + "/" + identifier + "()V;");
+        else builder.append("invokestatic java/lang/" + parentNode.identifier + "/" + identifier + "()V;\n");
       }
     }
 }
