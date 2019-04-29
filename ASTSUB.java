@@ -31,5 +31,13 @@ class ASTSUB extends SimpleNode {
 
 	return "int";
   }
+
+  public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	builder.append("|||Line: " + lineNumber + "-|||\n");
+	
+	((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+	((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+	builder.append("isub\n");
+  }
 }
 /* JavaCC - OriginalChecksum=353cd3b7689ade7340f0274f1f92fac7 (do not edit this line) */

@@ -32,5 +32,13 @@ class ASTDIV extends SimpleNode {
 	return "int";
   }
 
+  public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	builder.append("|||Line: " + lineNumber + "/|||\n");
+	
+	((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+	((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+	builder.append("idiv\n");
+  }
+
 }
 /* JavaCC - OriginalChecksum=7c3f486853a5965468791335eb31af69 (do not edit this line) */
