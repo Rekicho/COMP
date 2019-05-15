@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 public
 class ASTLESS extends SimpleNode {
+	static int labels = 0;
   public ASTLESS(int id) {
     super(id);
   }
@@ -30,6 +31,21 @@ class ASTLESS extends SimpleNode {
 	}
 
 	return "boolean";
+  }
+
+  public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	int label = labels;
+	labels += 2;
+	
+	((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+	((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+	builder.append("if_icmpge LT" + label + "\n");
+	
+	builder.append("iconst_1\ngoto LT" + ((int) label + 1) + "\nLT" + label + ":\niconst_0\nLT" + ((int) label + 1) + ":\n");
+  }
+
+  public void generateFunctionCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	generateCode(builder,ST,functionName);
   }
 }
 /* JavaCC - OriginalChecksum=80e981cb70049e1d63295d41a7f844d5 (do not edit this line) */

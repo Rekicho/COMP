@@ -1,14 +1,17 @@
 class Fac {
-	public int ComputeFac(int num){
-	int num_aux ;
-	if (num < 1)
+	public int ComputeFac(int num, int sim){
+		boolean ola;
+		int num_aux ;
+		ola = num < sim;
+	// if (num < 1)
+	// num_aux = 1;
+	// else
+	// num_aux = num * (this.ComputeFac(num - 1));
 	num_aux = 1;
-	else
-	num_aux = num * (this.ComputeFac(num - 1));
-	return num_aux;
+	 return num_aux;
 	}
 	public static void main(String[] a){
-	io.println(new Fac().ComputeFac(10)); //assuming the existence
+	// io.println(new Fac().ComputeFac(10)); //assuming the existence
 	// of the classfile io.class
 	}
    }

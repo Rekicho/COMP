@@ -130,13 +130,8 @@ public class ASTOtherLiteral extends SimpleNode {
 			builder.append("new " + className + "\ndup\ninvokespecial " + className + "/<init>()V\n");
 		}
 
-		// else if(parentNode.identifier.contains("ioPlus")) 
-		// 	builder.append("getstatic " + parentNode.identifier + "V;\n");
-		
-		// else builder.append("getstatic java/lang/" + parentNode.identifier + "V;\n");
-
 		if(parentNode.identifier.equals("this") || parentNode.identifier.equals("new " + ST.className) || (symbol != null && symbol.type.equals(ST.className))) {
-        	builder.append("invokevirtual " + ST.className + "/" + identifier + "()");
+        	builder.append("invokevirtual " + ST.className + "." + identifier + "()");
 
 		if(ST.functions.get(identifier).returnType.equals("boolean"))
 			builder.append("Z");
@@ -158,10 +153,10 @@ public class ASTOtherLiteral extends SimpleNode {
       else {
         if(parentNode.identifier.contains("new ")) {
           String function = parentNode.identifier.split("new ")[1];
-          builder.append("invokevirtual " + function + "/" + identifier + "()V\n");
+          builder.append("invokevirtual " + function + "." + identifier + "()V\n");
         }
           
-		else if(parentNode.identifier.contains("ioPlus"))
+		else if(parentNode.identifier.contains("io"))
 			builder.append("invokestatic " + parentNode.identifier + "." + identifier + "()V\n");
 		
 		else builder.append("invokestatic java/lang/" + parentNode.identifier + "." + identifier + "()V\n");

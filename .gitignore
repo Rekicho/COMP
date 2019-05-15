@@ -3,3 +3,6 @@
 
 # Settings
 .vscode
+
+!io.class
+!ioPlus.class

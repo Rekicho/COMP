@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 public
 class ASTAND extends SimpleNode {
+	static int labels = 0;
   public ASTAND(int id) {
     super(id);
   }
@@ -30,6 +31,22 @@ class ASTAND extends SimpleNode {
 	}
 
 	return "boolean";
+  }
+
+  public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	  int label = labels;
+	  labels += 2;
+	  
+	((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+	builder.append("ifeq AND" + label + "\n");
+	((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+	builder.append("ifeq AND" + label + "\n");
+	
+	builder.append("iconst_1\ngoto AND" + ((int) label + 1) + "\nAND" + label + ":\niconst_0\nAND" + ((int) label + 1) + ":\n");
+  }
+
+  public void generateFunctionCode(StringBuilder builder, SymbolTable ST, String functionName) {
+	generateCode(builder,ST,functionName);
   }
 
 }

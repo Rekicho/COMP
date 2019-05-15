@@ -101,7 +101,7 @@ public class ASTMethodDeclaration extends SimpleNode {
         else if(returnType.equals(ST.className))
           builder.append("L" + ST.className);
 
-		else builder.append("Ljava/lang/" + returnType);
+		else builder.append("Ljava/lang/" + returnType + ";");
 
 		builder.append("\n\n");
 		
@@ -114,7 +114,10 @@ public class ASTMethodDeclaration extends SimpleNode {
 			}
 		}
 
-		builder.append(".end method\n\n");
+		if(returnType.equals("boolean") || returnType.equals("int"))
+			builder.append("ireturn\n.end method\n\n");
+
+		else builder.append("return\n.end method\n\n");
 	}
 }
 /*
