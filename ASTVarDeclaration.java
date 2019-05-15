@@ -41,6 +41,30 @@ public class ASTVarDeclaration extends SimpleNode {
 		}
 	}
 
+	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		if(functionName == null) {
+			ASTType type = (ASTType) children[0];
+			String typeName = type.name;
+			if(type.isArray) typeName += "[]";
+			
+			builder.append(".field private " + name);
+
+			if(typeName.equals("boolean"))
+			builder.append(" Z\n");
+
+			else if(typeName.equals("int"))
+				builder.append(" I\n");
+
+			else if(typeName.equals("int[]"))
+				builder.append(" [I\n");
+
+			else if(typeName.equals(ST.className))
+				builder.append(" L" + ST.className + "\n");
+
+			else builder.append(" Ljava/lang/" + typeName + ";\n");
+		}
+	}
+
 }
 /*
  * JavaCC - OriginalChecksum=64dbd233ecaf7257caed4a6a751f30bf (do not edit this

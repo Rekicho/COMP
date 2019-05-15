@@ -62,7 +62,22 @@ class ASTClassDeclaration extends SimpleNode {
 
 		else builder.append("java/lang/Object\n");
 
-		builder.append("\n; standard initializer\n.method public <init>()V\n aload_0\n");
+		int i = 0;
+
+		if (children != null) {
+			for (; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+
+				if(!(n instanceof ASTVarDeclaration))
+					break;
+
+				if (n != null) {
+					n.generateCode(builder,ST,functionName);
+				}
+			}
+		}
+
+		builder.append("\n; standard initializer\n.method public <init>()V\naload_0\n");
 
 		if(!extends_class.equals(""))
 			builder.append("invokenonvirtual " + extends_class + "/<init>()V\n");
@@ -72,7 +87,7 @@ class ASTClassDeclaration extends SimpleNode {
 		builder.append("return\n.end method\n\n");
 
 		if (children != null) {
-			for (int i = 0; i < children.length; ++i) {
+			for (; i < children.length; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
 				if (n != null) {
 					n.generateCode(builder,ST,functionName);

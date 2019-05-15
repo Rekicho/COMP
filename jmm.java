@@ -40,6 +40,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			root.semanticAnalysis(ST, null);
 
 			StringBuilder builder = new StringBuilder();
+			builder.append(".source " + args[0] + "\n");
 			root.generateCode(builder, ST, null);
 			System.out.println("==========Code==========");
 			System.out.println(builder.toString());
