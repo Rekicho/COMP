@@ -28,8 +28,6 @@ class ASTMethodParams extends SimpleNode {
 	ASTLiteral parentparentNode = (ASTLiteral) parentNode.parent;
 
     if (parentNode.type.equals("call")) {
-		builder.append(";; call:" + parentparentNode.identifier + "." + parentNode.identifier + " ;;\n");
-
 		Symbol symbol = null;
 
       if(parentparentNode.identifier.equals("this")) {
@@ -54,7 +52,11 @@ class ASTMethodParams extends SimpleNode {
         builder.append("new " + className + "\ndup\ninvokespecial " + className + "/<init>()V\n");
       }
 
-      else builder.append("getstatic java/lang/" + parentparentNode.identifier + "/" + parentNode.identifier + " V;\n");
+	//   else if(parentparentNode.identifier.contains("ioPlus"))
+	//   	builder.append("getstatic " + parentparentNode.identifier + "V;\n");
+
+		  
+	// 	else builder.append("getstatic java/lang/" + parentparentNode.identifier + "V;\n");
 
 		if (children != null) {
 			for (int i = children.length - 1; i >= 0; i--) {
@@ -113,8 +115,11 @@ class ASTMethodParams extends SimpleNode {
           builder.append("invokevirtual " + function + "/" + parentNode.identifier + "(");
         }
           
+		else if(parentparentNode.identifier.contains("ioPlus"))
+			builder.append("invokestatic " + parentparentNode.identifier + "." + parentNode.identifier + "(");
 
-        else builder.append("invokestatic java/lang/" + parentparentNode.identifier + "/" + parentNode.identifier + "(");
+		else builder.append("invokestatic java/lang/" + parentparentNode.identifier + "." + parentNode.identifier + "(");
+		
         for (int i = children.length - 1; i >= 0; i--) {
           try{
             String type = ((SimpleNode) children[i]).semanticAnalysis(ST, functionName);

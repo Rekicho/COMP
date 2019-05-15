@@ -62,8 +62,6 @@ class ASTMainDeclaration extends SimpleNode {
 	}
 	
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
-		builder.append(";;; Main: ;;;\n");
-
 		builder.append(".method public static main([Ljava/lang/String;)V\n\n");
 
 		if (children != null) {
@@ -75,7 +73,7 @@ class ASTMainDeclaration extends SimpleNode {
 			}
 		}
 
-		builder.append(".end method\n");
+		builder.append("return\n.end method\n\n");
 	}
 
 }

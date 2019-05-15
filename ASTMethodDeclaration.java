@@ -60,8 +60,6 @@ public class ASTMethodDeclaration extends SimpleNode {
 	}
 
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
-		builder.append(";;; " + name + ": ;;;\n");
-
 		builder.append(".method public " + name + "(");
 
 		if(children.length >= 2 && children[1] instanceof ASTParameters) {
@@ -116,7 +114,7 @@ public class ASTMethodDeclaration extends SimpleNode {
 			}
 		}
 
-		builder.append(".end method\n");
+		builder.append(".end method\n\n");
 	}
 }
 /*

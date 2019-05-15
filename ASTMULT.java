@@ -32,9 +32,7 @@ class ASTMULT extends SimpleNode {
 	return "int";
   }
 
-  public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
-	builder.append(";;; Line: " + lineNumber + "* ;;;\n");
-	
+  public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {	
 	((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
 	((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
 	builder.append("imul\n");

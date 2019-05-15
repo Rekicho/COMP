@@ -57,14 +57,14 @@ class ASTClassDeclaration extends SimpleNode {
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
 		builder.append(".class public " + class_name + "\n.super ");
 
-		if(extends_class.equals(""))
+		if(!extends_class.equals(""))
 			builder.append(extends_class + "\n");
 
 		else builder.append("java/lang/Object\n");
 
 		builder.append("\n; standard initializer\n.method public <init>()V\n aload_0\n\n");
 
-		if(extends_class.equals(""))
+		if(!extends_class.equals(""))
 			builder.append("invokenonvirtual " + extends_class + "/<init>()V\n");
 
 		else builder.append("invokenonvirtual java/lang/Object/<init>()V\n");
