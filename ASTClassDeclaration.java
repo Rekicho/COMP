@@ -62,7 +62,7 @@ class ASTClassDeclaration extends SimpleNode {
 
 		else builder.append("java/lang/Object\n");
 
-		builder.append("\n; standard initializer\n.method public <init>()V\n aload_0\n\n");
+		builder.append("\n; standard initializer\n.method public <init>()V\n aload_0\n");
 
 		if(!extends_class.equals(""))
 			builder.append("invokenonvirtual " + extends_class + "/<init>()V\n");

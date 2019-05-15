@@ -103,7 +103,7 @@ public class ASTMethodDeclaration extends SimpleNode {
 
 		else builder.append("Ljava/lang/" + returnType + ";");
 
-		builder.append("\n\n");
+		builder.append("\n");
 		
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {

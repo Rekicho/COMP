@@ -4,6 +4,7 @@ public
 class ASTStatement extends SimpleNode {
 	String type = "";
 	String identifier = "";
+	static int labels = 0;
 
   public ASTStatement(int id) {
     super(id);
@@ -24,6 +25,34 @@ class ASTStatement extends SimpleNode {
 
 	return "Statement";
   }
+
+	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		if(type.equals("if")) {
+			int label = labels;
+			labels++;
+			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+			builder.append("ifeq ELSE" + label + "\n");
+			((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+			builder.append("goto ENDIF" + label + "\nELSE" + label + ":\n");
+			((SimpleNode)children[2]).generateFunctionCode(builder, ST, functionName);
+			builder.append("ENDIF" + label + ":\n");
+			return;
+		}
+
+		if(type.equals("while")) {
+			int label = labels;
+			labels++;
+			builder.append("WHILE" + label + ":\n");
+			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+			builder.append("ifeq ENDWHILE" + label + "\n");
+			((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+			builder.append("goto WHILE" + label + "\nENDWHILE" + label + ":\n");
+
+			return;
+		}
+
+		super.generateCode(builder,ST,functionName);
+	}
 
 }
 /* JavaCC - OriginalChecksum=2405f96baf2205473865575b3fc06196 (do not edit this line) */
