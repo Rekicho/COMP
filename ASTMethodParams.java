@@ -92,7 +92,7 @@ class ASTMethodParams extends SimpleNode {
 				else if(ST.functions.get(parentNode.identifier).returnType.equals("int"))
 					builder.append("I" );
 
-				else if(ST.functions.get(parentNode.identifier).returnType.equals("int"))
+				else if(ST.functions.get(parentNode.identifier).returnType.equals("int[]"))
 					builder.append("[I" );
 
         else if(ST.functions.get(parentNode.identifier).returnType.equals(ST.className))

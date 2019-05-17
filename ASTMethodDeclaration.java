@@ -106,12 +106,13 @@ public class ASTMethodDeclaration extends SimpleNode {
 		builder.append("\n");
 		
 		if (children != null) {
-			for (int i = 0; i < children.length; ++i) {
+			for (int i = 0; i < children.length - 1; ++i) {
 				SimpleNode n = (SimpleNode) children[i];
 				if (n != null) {
 					n.generateCode(builder,ST,name);
 				}
 			}
+			SimpleNode n = (SimpleNode) children[children.length - 1];
 		}
 
 		if(returnType.equals("boolean") || returnType.equals("int"))

@@ -103,8 +103,37 @@ public class ASTOtherLiteral extends SimpleNode {
 		
 		ASTLiteral parentNode = (ASTLiteral) parent;
 
-		if(!type.equals("call"))
+		if(type.equals("[]")) {
+			Symbol symbol;
+			if ((symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null) {
+				builder.append("aload_" + symbol.order + "\n");
+			}
+			else if ((symbol = ST.functions.get(functionName).params.get(parentNode.identifier)) != null) {
+				builder.append("aload_" + symbol.order + "\n");
+			}
+			else if((symbol = ST.symbols.get(parentNode.identifier)) != null) {
+				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "[I\n");
+			}
+
+			((SimpleNode)(parentNode.children[0])).generateFunctionCode(builder, ST, functionName);
+			builder.append("iaload\n"); 
 			return;
+		}
+
+		if(type.equals("length")) {
+			Symbol symbol;
+			if ((symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null) {
+				builder.append("aload_" + symbol.order + "\n");
+			}
+			else if ((symbol = ST.functions.get(functionName).params.get(parentNode.identifier)) != null) {
+				builder.append("aload_" + symbol.order + "\n");
+			}
+			else if((symbol = ST.symbols.get(parentNode.identifier)) != null) {
+				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "[I\n");
+			}
+			builder.append("arraylength\n"); 
+			return;
+		}
 
 		Symbol symbol = null;
 

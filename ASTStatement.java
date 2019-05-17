@@ -27,7 +27,9 @@ class ASTStatement extends SimpleNode {
   }
 
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
-		System.out.println(type);
+		if(type.equals("multiple")) {
+			super.generateCode(builder,ST,functionName);
+		}
 		if(type.equals("if")) {
 			int label = labels;
 			labels++;
@@ -52,7 +54,75 @@ class ASTStatement extends SimpleNode {
 			return;
 		}
 
-		super.generateCode(builder,ST,functionName);
+		if(type.equals("=")) {
+			if(identifier.equals("this")) {
+				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+				builder.append("astore_0");
+			} else {
+				Symbol symbol;
+				if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
+					((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+					builder.append("istore_" + symbol.order);
+				}
+				else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
+					((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+					builder.append("istore_" + symbol.order);
+				}
+				else if((symbol = ST.symbols.get(identifier)) != null) {
+					builder.append("aload_0\n");
+
+					((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+
+					if(symbol.type.equals("boolean"))
+						builder.append("putfield " + ST.className + "/" + identifier + "Z" );
+	
+					else if(symbol.type.equals("int"))
+						builder.append("putfield " + ST.className + "/" + identifier + "I" );
+
+					else if(symbol.type.equals("int[]"))
+						builder.append("putfield " + ST.className + "/" + identifier + "[I" );
+	
+					else builder.append("putfield " + ST.className + "/" + identifier + "L" );
+
+					builder.append("\n");
+				} 
+			}
+		}
+
+		if(type.equals("[]=")) {
+			Symbol symbol;
+			if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
+				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+				builder.append("astore_" + symbol.order);
+			}
+			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
+				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+				builder.append("astore_" + symbol.order);
+			}
+			else if((symbol = ST.symbols.get(identifier)) != null) {
+				builder.append("aload_0\n");
+
+				if(symbol.type.equals("boolean"))
+					builder.append("getfield " + ST.className + "/" + identifier + "Z" );
+
+				else if(symbol.type.equals("int"))
+					builder.append("getfield " + ST.className + "/" + identifier + "I" );
+
+				else if(symbol.type.equals("int[]"))
+					builder.append("getfield " + ST.className + "/" + identifier + "[I" );
+
+				else builder.append("getfield " + ST.className + "/" + identifier + "L" );
+
+				builder.append("\n");
+			}
+			
+			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+			((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+
+			builder.append("iastore\n");
+		}
+
+		super.generateFunctionCode(builder,ST,functionName);
 	}
 
 }
