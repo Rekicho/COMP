@@ -27,14 +27,15 @@ class ASTStatement extends SimpleNode {
   }
 
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		System.out.println(type);
 		if(type.equals("if")) {
 			int label = labels;
 			labels++;
 			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
 			builder.append("ifeq ELSE" + label + "\n");
-			((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+			((SimpleNode)children[1]).generateCode(builder, ST, functionName);
 			builder.append("goto ENDIF" + label + "\nELSE" + label + ":\n");
-			((SimpleNode)children[2]).generateFunctionCode(builder, ST, functionName);
+			((SimpleNode)children[2]).generateCode(builder, ST, functionName);
 			builder.append("ENDIF" + label + ":\n");
 			return;
 		}
@@ -45,7 +46,7 @@ class ASTStatement extends SimpleNode {
 			builder.append("WHILE" + label + ":\n");
 			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
 			builder.append("ifeq ENDWHILE" + label + "\n");
-			((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+			((SimpleNode)children[1]).generateCode(builder, ST, functionName);
 			builder.append("goto WHILE" + label + "\nENDWHILE" + label + ":\n");
 
 			return;
