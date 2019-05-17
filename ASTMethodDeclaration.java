@@ -67,16 +67,16 @@ public class ASTMethodDeclaration extends SimpleNode {
 
 			for(int i = 0; i < parameters.length; i++){
 				if(parameters[i].equals("boolean"))
-					builder.append("Z;");
+					builder.append("Z");
 
 				else if(parameters[i].equals("int"))
-					builder.append("I;");
+					builder.append("I");
 
 				else if(parameters[i].equals("int[]"))
-					builder.append("[I;");
+					builder.append("[I");
 
 				else if(parameters[i].equals(ST.className))
-				builder.append("L" + ST.className + ";");
+				builder.append("L" + ST.className + "");
 
 				else builder.append("Ljava/lang/" + parameters[i] + ";");
 			}
@@ -103,7 +103,7 @@ public class ASTMethodDeclaration extends SimpleNode {
 
 		else builder.append("Ljava/lang/" + returnType + ";");
 
-		builder.append("\n");
+		builder.append("\n.limit stack 100\n.limit locals " + ((int) ST.functions.get(name).params.size() + ST.functions.get(name).locals.size() + 1) + "\n");
 		
 		if (children != null) {
 			for (int i = 0; i < children.length - 1; ++i) {
@@ -113,12 +113,13 @@ public class ASTMethodDeclaration extends SimpleNode {
 				}
 			}
 			SimpleNode n = (SimpleNode) children[children.length - 1];
+			n.generateFunctionCode(builder,ST,name);
 		}
 
 		if(returnType.equals("boolean") || returnType.equals("int"))
 			builder.append("ireturn\n.end method\n\n");
 
-		else builder.append("return\n.end method\n\n");
+		else builder.append("areturn\n.end method\n\n");
 	}
 }
 /*

@@ -29,6 +29,7 @@ class ASTStatement extends SimpleNode {
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
 		if(type.equals("multiple")) {
 			super.generateCode(builder,ST,functionName);
+			return;
 		}
 		if(type.equals("if")) {
 			int label = labels;
@@ -62,11 +63,15 @@ class ASTStatement extends SimpleNode {
 				Symbol symbol;
 				if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
 					((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-					builder.append("istore_" + symbol.order);
+					if(symbol.type.equals("int") || symbol.type.equals("boolean"))
+						builder.append("istore " + symbol.order + "\n");
+					else builder.append("astore " + symbol.order + "\n");
 				}
 				else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
 					((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-					builder.append("istore_" + symbol.order);
+					if(symbol.type.equals("int") || symbol.type.equals("boolean"))
+						builder.append("istore " + symbol.order + "\n");
+					else builder.append("astore " + symbol.order + "\n");
 				}
 				else if((symbol = ST.symbols.get(identifier)) != null) {
 					builder.append("aload_0\n");
@@ -74,44 +79,46 @@ class ASTStatement extends SimpleNode {
 					((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
 
 					if(symbol.type.equals("boolean"))
-						builder.append("putfield " + ST.className + "/" + identifier + "Z" );
+						builder.append("putfield " + ST.className + "/" + identifier + " Z" );
 	
 					else if(symbol.type.equals("int"))
-						builder.append("putfield " + ST.className + "/" + identifier + "I" );
+						builder.append("putfield " + ST.className + "/" + identifier + " I" );
 
 					else if(symbol.type.equals("int[]"))
-						builder.append("putfield " + ST.className + "/" + identifier + "[I" );
+						builder.append("putfield " + ST.className + "/" + identifier + " [I" );
 	
-					else builder.append("putfield " + ST.className + "/" + identifier + "L" );
+					else builder.append("putfield " + ST.className + "/" + identifier + " L" );
 
 					builder.append("\n");
 				} 
 			}
+
+			return;
 		}
 
 		if(type.equals("[]=")) {
 			Symbol symbol;
 			if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
 				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-				builder.append("astore_" + symbol.order);
+				builder.append("astore " + symbol.order);
 			}
 			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
 				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-				builder.append("astore_" + symbol.order);
+				builder.append("astore " + symbol.order);
 			}
 			else if((symbol = ST.symbols.get(identifier)) != null) {
 				builder.append("aload_0\n");
 
 				if(symbol.type.equals("boolean"))
-					builder.append("getfield " + ST.className + "/" + identifier + "Z" );
+					builder.append("getfield " + ST.className + "/" + identifier + " Z" );
 
 				else if(symbol.type.equals("int"))
-					builder.append("getfield " + ST.className + "/" + identifier + "I" );
+					builder.append("getfield " + ST.className + "/" + identifier + " I" );
 
 				else if(symbol.type.equals("int[]"))
-					builder.append("getfield " + ST.className + "/" + identifier + "[I" );
+					builder.append("getfield " + ST.className + "/" + identifier + " [I" );
 
-				else builder.append("getfield " + ST.className + "/" + identifier + "L" );
+				else builder.append("getfield " + ST.className + "/" + identifier + " L" );
 
 				builder.append("\n");
 			}
@@ -120,6 +127,7 @@ class ASTStatement extends SimpleNode {
 			((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
 
 			builder.append("iastore\n");
+			return;
 		}
 
 		super.generateFunctionCode(builder,ST,functionName);

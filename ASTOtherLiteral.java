@@ -106,13 +106,13 @@ public class ASTOtherLiteral extends SimpleNode {
 		if(type.equals("[]")) {
 			Symbol symbol;
 			if ((symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null) {
-				builder.append("aload_" + symbol.order + "\n");
+				builder.append("aload " + symbol.order + "\n");
 			}
 			else if ((symbol = ST.functions.get(functionName).params.get(parentNode.identifier)) != null) {
-				builder.append("aload_" + symbol.order + "\n");
+				builder.append("aload " + symbol.order + "\n");
 			}
 			else if((symbol = ST.symbols.get(parentNode.identifier)) != null) {
-				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "[I\n");
+				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " [I\n");
 			}
 
 			((SimpleNode)(parentNode.children[0])).generateFunctionCode(builder, ST, functionName);
@@ -123,13 +123,13 @@ public class ASTOtherLiteral extends SimpleNode {
 		if(type.equals("length")) {
 			Symbol symbol;
 			if ((symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null) {
-				builder.append("aload_" + symbol.order + "\n");
+				builder.append("aload " + symbol.order + "\n");
 			}
 			else if ((symbol = ST.functions.get(functionName).params.get(parentNode.identifier)) != null) {
-				builder.append("aload_" + symbol.order + "\n");
+				builder.append("aload " + symbol.order + "\n");
 			}
 			else if((symbol = ST.symbols.get(parentNode.identifier)) != null) {
-				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "[I\n");
+				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " [I\n");
 			}
 			builder.append("arraylength\n"); 
 			return;
@@ -142,15 +142,15 @@ public class ASTOtherLiteral extends SimpleNode {
 		}
 
 		else if(functionName != null && (symbol = ST.functions.get(functionName).params.get(parentNode.identifier)) != null && symbol.type.equals(ST.className)) {
-			builder.append("aload_" + symbol.order + "\n");
+			builder.append("aload " + symbol.order + "\n");
 		}
 
 		else if(functionName != null && (symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null && symbol.type.equals(ST.className)) {
-			builder.append("aload_" + symbol.order + "\n");
+			builder.append("aload " + symbol.order + "\n");
 		}
 
 		else if((symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null && symbol.type.equals(ST.className)) {
-			builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "\n");
+			builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " L\n");
 		}
 
 		else if(parentNode.identifier.contains("new")) {
@@ -174,9 +174,9 @@ public class ASTOtherLiteral extends SimpleNode {
         else if(ST.functions.get(identifier).returnType.equals(ST.className))
           builder.append("L" + ST.className);
 
-        else builder.append("Ljava/lang/" + identifier);
+        else builder.append("Ljava/lang/" + identifier + ";");
 
-        builder.append(";\n");
+        builder.append("\n");
       }
 
       else {
@@ -185,7 +185,7 @@ public class ASTOtherLiteral extends SimpleNode {
           builder.append("invokevirtual " + function + "." + identifier + "()V\n");
         }
           
-		else if(parentNode.identifier.contains("io"))
+		else if(parentNode.identifier.contains("io") || parentNode.identifier.contains("MathUtils"))
 			builder.append("invokestatic " + parentNode.identifier + "." + identifier + "()V\n");
 		
 		else builder.append("invokestatic java/lang/" + parentNode.identifier + "." + identifier + "()V\n");

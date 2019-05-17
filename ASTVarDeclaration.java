@@ -33,9 +33,9 @@ public class ASTVarDeclaration extends SimpleNode {
 				throw new Exception("Line " + lineNumber + ": Function " + functionName + " local " + name + " declared more than once.");
 
 			table.functions.get(functionName).locals.put(name,symbol);
-			symbol.order = table.functions.get(functionName).locals.size() + table.functions.get(functionName).params.size();
+			symbol.order = table.functions.get(functionName).locals.size() + table.functions.get(functionName).params.size() - 1;
 
-			if(functionName.equals("main")) {
+			if(!functionName.equals("main")) {
 				symbol.order++;
 			}
 		}

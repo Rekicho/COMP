@@ -182,14 +182,15 @@ public class ASTLiteral extends SimpleNode {
 
 	public void generateFunctionCode(StringBuilder builder, SymbolTable ST, String functionName) {		
 		if(identifier.equals("new int[...]")) {
-			if ((symbol = ST.functions.get(functionName).locals.get(parentNode.identifier)) != null) {
-				builder.append("aload_" + symbol.order + "\n");
+			Symbol symbol;
+			if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
+				builder.append("aload " + symbol.order + "\n");
 			}
-			else if ((symbol = ST.functions.get(functionName).params.get(parentNode.identifier)) != null) {
-				builder.append("aload_" + symbol.order + "\n");
+			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
+				builder.append("aload " + symbol.order + "\n");
 			}
-			else if((symbol = ST.symbols.get(parentNode.identifier)) != null) {
-				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "[I\n");
+			else if((symbol = ST.symbols.get(identifier)) != null) {
+				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " [I\n");
 			}
 
 			((SimpleNode) children[0]).generateFunctionCode(builder, ST, functionName);
@@ -251,27 +252,27 @@ public class ASTLiteral extends SimpleNode {
 			Symbol symbol;
 			if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
 				if(symbol.type.equals("boolean") || symbol.type.equals("int"))
-					builder.append("iload_" + symbol.order);
+					builder.append("iload " + symbol.order);
 
-				else builder.append("aload_" + symbol.order);
+				else builder.append("aload " + symbol.order);
 			}
 			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
 				if(symbol.type.equals("boolean") || symbol.type.equals("int"))
-					builder.append("iload_" + symbol.order);
+					builder.append("iload " + symbol.order);
 
-				else builder.append("aload_" + symbol.order);
+				else builder.append("aload " + symbol.order);
 			}
 			else if((symbol = ST.symbols.get(identifier)) != null) {
 				if(symbol.type.equals("boolean"))
-					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "Z" );
+					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " Z" );
 
 				else if(symbol.type.equals("int"))
-					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "I" );
+					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " I" );
 
 				else if(symbol.type.equals("int[]"))
-					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "[I" );
+					builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " [I" );
 
-				else builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + "L" );
+				else builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " L" );
 			} 
 		}
 

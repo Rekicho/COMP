@@ -35,15 +35,15 @@ class ASTMethodParams extends SimpleNode {
 	  }
 
 		else if(functionName != null && (symbol = ST.functions.get(functionName).params.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
-			builder.append("aload_" + symbol.order + "\n");
+			builder.append("aload " + symbol.order + "\n");
 		}
 
 		else if(functionName != null && (symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
-			builder.append("aload_" + symbol.order + "\n");
+			builder.append("aload " + symbol.order + "\n");
 		}
 
 		else if((symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
-			builder.append("aload_0\ngetfield " + ST.className + "/" + parentNode.identifier + "\n");
+			builder.append("aload_0\ngetfield " + ST.className + "/" + parentNode.identifier + " L\n");
 		}
 
       else if(parentparentNode.identifier.contains("new")) {
@@ -79,9 +79,7 @@ class ASTMethodParams extends SimpleNode {
 		  else if(type.equals("int[]"))
             builder.append("[I");
           
-          else builder.append("Ljava/lang/" + type);
-
-          builder.append(";");
+          else builder.append("Ljava/lang/" + type + ";");
         }
 
         builder.append(")");
@@ -109,7 +107,7 @@ class ASTMethodParams extends SimpleNode {
           builder.append("invokevirtual " + function + "." + parentNode.identifier + "(");
         }
           
-		else if(parentparentNode.identifier.contains("io"))
+		else if(parentparentNode.identifier.contains("io") || parentparentNode.identifier.equals("MathUtils"))
 			builder.append("invokestatic " + parentparentNode.identifier + "." + parentNode.identifier + "(");
 
 		else builder.append("invokestatic java/lang/" + parentparentNode.identifier + "." + parentNode.identifier + "(");
@@ -130,9 +128,8 @@ class ASTMethodParams extends SimpleNode {
             else if(type.equals(ST.className))
               builder.append("L" + ST.className);
 
-			else builder.append("Ljava/lang/" + ((ASTLiteral) children[i]).identifier);
+			else builder.append("Ljava/lang/" + ((ASTLiteral) children[i]).identifier + ";");
 			
-			builder.append(";");
           } catch(Exception e){};
 				}
         builder.append(")V\n");
