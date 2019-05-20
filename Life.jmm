@@ -277,8 +277,6 @@ class Life {
                 upX = x - 1;
             else
 				upX = xMax;
-			io.print(upX);
-			io.print(downX);
         } else {
             downX = 0;
             upX = x - 1;

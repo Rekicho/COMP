@@ -1088,7 +1088,7 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			}
 			case BANG: {
 				t = jj_consume_token(BANG);
-				Expression();
+				Literal();
 				OtherLiteral();
 				jjtree.closeNodeScope(jjtn000, true);
 				jjtc000 = false;
