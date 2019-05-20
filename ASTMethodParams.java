@@ -46,14 +46,14 @@ class ASTMethodParams extends SimpleNode {
 			builder.append("aload_0\ngetfield " + ST.className + "/" + parentNode.identifier + " L\n");
 		}
 
-      else if(parentparentNode.identifier.contains("new")) {
+      else if(parentparentNode.identifier.contains("new ")) {
         String className = parentparentNode.identifier.split("new ")[1];
 
         builder.append("new " + className + "\ndup\ninvokespecial " + className + "/<init>()V\n");
       }
 
 		if (children != null) {
-			for (int i = children.length - 1; i >= 0; i--) {
+			for (int i = 0; i < children.length; i++) {
 				((SimpleNode) children[i]).generateFunctionCode(builder, ST, functionName);
 			}
 		}
@@ -96,7 +96,10 @@ class ASTMethodParams extends SimpleNode {
         else if(ST.functions.get(parentNode.identifier).returnType.equals(ST.className))
           builder.append("L" + ST.className);
 
-        else builder.append("Ljava/lang/" + parentNode.identifier + ";");
+		else builder.append("Ljava/lang/" + parentNode.identifier + ";");
+		
+		if(!isStore(1))
+			builder.append("\npop");
 
         builder.append("\n");
       }
@@ -112,7 +115,7 @@ class ASTMethodParams extends SimpleNode {
 
 		else builder.append("invokestatic java/lang/" + parentparentNode.identifier + "." + parentNode.identifier + "(");
 		
-        for (int i = children.length - 1; i >= 0; i--) {
+        for (int i = 0; i < children.length; i++) {
           try{
             String type = ((SimpleNode) children[i]).semanticAnalysis(ST, functionName);
 
@@ -132,8 +135,12 @@ class ASTMethodParams extends SimpleNode {
 			
           } catch(Exception e){};
 				}
-        builder.append(")V\n");
-      }
+        
+		if(isStore(1))
+			builder.append(")I\n");
+		
+		else builder.append(")V\n");
+	  }
     }
 	}  
 }

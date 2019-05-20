@@ -112,7 +112,7 @@ public class ASTOtherLiteral extends SimpleNode {
 				builder.append("aload " + symbol.order + "\n");
 			}
 			else if((symbol = ST.symbols.get(parentNode.identifier)) != null) {
-				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " [I\n");
+				builder.append("aload_0\ngetfield " + ST.className + "/" + parentNode.identifier + " [I\n");
 			}
 
 			((SimpleNode)(parentNode.children[0])).generateFunctionCode(builder, ST, functionName);
@@ -129,7 +129,7 @@ public class ASTOtherLiteral extends SimpleNode {
 				builder.append("aload " + symbol.order + "\n");
 			}
 			else if((symbol = ST.symbols.get(parentNode.identifier)) != null) {
-				builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " [I\n");
+				builder.append("aload_0\ngetfield " + ST.className + "/" + parentNode.identifier + " [I\n");
 			}
 			builder.append("arraylength\n"); 
 			return;
@@ -153,7 +153,7 @@ public class ASTOtherLiteral extends SimpleNode {
 			builder.append("aload_0\ngetfield " + ST.className + "/" + identifier + " L\n");
 		}
 
-		else if(parentNode.identifier.contains("new")) {
+		else if(parentNode.identifier.contains("new ")) {
 			String className = parentNode.identifier.split("new ")[1];
 	
 			builder.append("new " + className + "\ndup\ninvokespecial " + className + "/<init>()V\n");
@@ -176,20 +176,26 @@ public class ASTOtherLiteral extends SimpleNode {
 
         else builder.append("Ljava/lang/" + identifier + ";");
 
-        builder.append("\n");
+		if(!isStore(0)) 
+			builder.append("\npop");
+		
+		builder.append("\n");
       }
 
       else {
         if(parentNode.identifier.contains("new ")) {
           String function = parentNode.identifier.split("new ")[1];
           builder.append("invokevirtual " + function + "." + identifier + "()V\n");
-        }
+		}
+		
+		else if(isStore(0))
+			builder.append("invokestatic " + parentNode.identifier + "." + identifier + "()I\n");
           
 		else if(parentNode.identifier.contains("io") || parentNode.identifier.contains("MathUtils"))
 			builder.append("invokestatic " + parentNode.identifier + "." + identifier + "()V\n");
 		
 		else builder.append("invokestatic java/lang/" + parentNode.identifier + "." + identifier + "()V\n");
-      }
+	  }
     }
 }
 /*

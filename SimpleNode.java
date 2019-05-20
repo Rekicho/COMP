@@ -153,6 +153,30 @@ public class SimpleNode implements Node {
 			}
 		}
 	}
+
+	public boolean isStore(int limit) {
+		int i = 0;
+		SimpleNode parentNode = (SimpleNode) parent;
+		for(;parentNode != null; parentNode = (SimpleNode) parentNode.parent) {
+			if(parentNode instanceof ASTStatement) {
+				ASTStatement statement = (ASTStatement) parentNode;
+
+				if(statement.type.equals(""))
+					return false;
+	
+				else return true;
+			}
+
+			if(parentNode instanceof ASTOtherLiteral) {
+				i++;
+				
+				if(i > limit)
+					return true;
+			}
+		}
+
+		return true;
+	}
 }
 
 /*

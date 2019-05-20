@@ -47,7 +47,7 @@ public class ASTVarDeclaration extends SimpleNode {
 			String typeName = type.name;
 			if(type.isArray) typeName += "[]";
 			
-			builder.append(".field private " + name);
+			builder.append(".field private '" + name + "'");
 
 			if(typeName.equals("boolean"))
 			builder.append(" Z\n");

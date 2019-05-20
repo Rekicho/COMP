@@ -111,7 +111,7 @@ public class ASTLiteral extends SimpleNode {
 			return "int[]";
 		}
 
-		else if (identifier.length() >= 3 && identifier.substring(0, 3).equals("new")) {
+		else if (identifier.length() >= 4 && identifier.substring(0, 4).equals("new ")) {
 			if (children == null || children.length == 0)
 				return identifier.substring(4);
 
@@ -154,7 +154,7 @@ public class ASTLiteral extends SimpleNode {
 		if (identifier.equals("new int[...]"))
 			return true;
 
-		if (identifier.length() >= 3 && identifier.substring(0, 3).equals("new"))
+		if (identifier.length() >= 4 && identifier.substring(0, 4).equals("new "))
 			return false;
 
 		if (identifier.equals("")) {
@@ -198,7 +198,7 @@ public class ASTLiteral extends SimpleNode {
 			return;
 		}
 
-		if(identifier.contains("new")) {
+		if(identifier.contains("new ")) {
 			builder.append(identifier + "\ndup\ninvokespecial " + identifier.substring(4) + "/<init>()V\n");
 			return;
 		}

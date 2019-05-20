@@ -58,7 +58,7 @@ class ASTStatement extends SimpleNode {
 		if(type.equals("=")) {
 			if(identifier.equals("this")) {
 				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-				builder.append("astore_0");
+				builder.append("astore_0\n");
 			} else {
 				Symbol symbol;
 				if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
@@ -99,12 +99,20 @@ class ASTStatement extends SimpleNode {
 		if(type.equals("[]=")) {
 			Symbol symbol;
 			if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
+				builder.append("aload " + symbol.order + "\n");
+				
 				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-				builder.append("astore " + symbol.order);
+				((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+
+				builder.append("iastore\n");
 			}
 			else if ((symbol = ST.functions.get(functionName).params.get(identifier)) != null) {
+				builder.append("aload " + symbol.order + "\n");
+
 				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-				builder.append("astore " + symbol.order);
+				((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+
+				builder.append("iastore\n");
 			}
 			else if((symbol = ST.symbols.get(identifier)) != null) {
 				builder.append("aload_0\n");
@@ -121,12 +129,12 @@ class ASTStatement extends SimpleNode {
 				else builder.append("getfield " + ST.className + "/" + identifier + " L" );
 
 				builder.append("\n");
-			}
-			
-			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-			((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
 
-			builder.append("iastore\n");
+				((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+				((SimpleNode)children[1]).generateFunctionCode(builder, ST, functionName);
+	
+				builder.append("iastore\n");
+			}
 			return;
 		}
 

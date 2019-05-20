@@ -42,8 +42,8 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			StringBuilder builder = new StringBuilder();
 			builder.append(".source " + args[0] + "\n");
 			root.generateCode(builder, ST, null);
-			System.out.println("==========Code==========");
-			System.out.println(builder.toString());
+			//System.out.println("==========Code==========");
+			//System.out.println(builder.toString());
 
 			FileWriter fileWriter = new FileWriter(args[0].split("\\.")[0] + ".j");
 			PrintWriter printWriter = new PrintWriter(fileWriter);
