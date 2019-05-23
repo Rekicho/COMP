@@ -191,10 +191,7 @@ public class ASTOtherLiteral extends SimpleNode {
 		else if(isStore(0))
 			builder.append("invokestatic " + parentNode.identifier + "." + identifier + "()I\n");
           
-		else if(parentNode.identifier.contains("io") || parentNode.identifier.contains("MathUtils"))
-			builder.append("invokestatic " + parentNode.identifier + "." + identifier + "()V\n");
-		
-		else builder.append("invokestatic java/lang/" + parentNode.identifier + "." + identifier + "()V\n");
+		else builder.append("invokestatic " + parentNode.identifier + "." + identifier + "()V\n");
 	  }
     }
 }

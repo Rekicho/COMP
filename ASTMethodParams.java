@@ -110,10 +110,7 @@ class ASTMethodParams extends SimpleNode {
           builder.append("invokevirtual " + function + "." + parentNode.identifier + "(");
         }
           
-		else if(parentparentNode.identifier.contains("io") || parentparentNode.identifier.equals("MathUtils"))
-			builder.append("invokestatic " + parentparentNode.identifier + "." + parentNode.identifier + "(");
-
-		else builder.append("invokestatic java/lang/" + parentparentNode.identifier + "." + parentNode.identifier + "(");
+		else builder.append("invokestatic " + parentparentNode.identifier + "." + parentNode.identifier + "(");
 		
         for (int i = 0; i < children.length; i++) {
           try{
