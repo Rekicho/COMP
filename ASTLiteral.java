@@ -199,7 +199,11 @@ public class ASTLiteral extends SimpleNode {
 		}
 
 		if(identifier.contains("new ")) {
-			builder.append(identifier + "\ndup\ninvokespecial " + identifier.substring(4) + "/<init>()V\n");
+			if(children != null) 
+				super.generateCode(builder, ST, functionName);
+
+			else builder.append(identifier + "\ndup\ninvokespecial " + identifier.substring(4) + "/<init>()V\n");
+
 			return;
 		}
 
