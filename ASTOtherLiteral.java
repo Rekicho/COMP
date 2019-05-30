@@ -43,8 +43,9 @@ public class ASTOtherLiteral extends SimpleNode {
 				throw new Exception(literal.identifier + " is not an array.");
 
 			SimpleNode n = (SimpleNode) ((SimpleNode)parent).children[0];
+			String otherType = n.semanticAnalysis(table, functionName);
 
-			if (!n.semanticAnalysis(table, functionName).equals("int"))
+			if (!otherType.equals("int")  && !otherType.equals(""))
 				throw new Exception("Integer Expression expected inside []");
 
 			return "[]";

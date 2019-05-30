@@ -24,7 +24,7 @@ class ASTLESS extends SimpleNode {
 			if (n != null) {
 				type = n.semanticAnalysis(table,functionName);
 
-				if(!type.equals("int"))
+				if(!type.equals("int") && !type.equals(""))
 					throw new Exception("< expected integer but found " + type);
 			}
 		}

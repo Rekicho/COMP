@@ -89,8 +89,9 @@ public class ASTLiteral extends SimpleNode {
 
 		if (identifier.equals("!")) {
 			SimpleNode n = (SimpleNode) children[0];
+			String childType = n.semanticAnalysis(table, functionName);
 
-			if (n.semanticAnalysis(table, functionName) != "boolean")
+			if(!childType.equals("boolean") && !childType.equals(""))
 				throw new Exception("Boolean Expression expected after '!'.");
 
 			return "boolean";
@@ -104,8 +105,9 @@ public class ASTLiteral extends SimpleNode {
 
 		if (identifier.equals("new int[...]")) {
 			SimpleNode n = (SimpleNode) children[0];
+			String childType = n.semanticAnalysis(table, functionName);
 
-			if (n.semanticAnalysis(table, functionName) != "int")
+			if(!childType.equals("int") && !childType.equals(""))
 				throw new Exception("Integer Expression expected inside [].");
 
 			return "int[]";

@@ -24,7 +24,7 @@ class ASTAND extends SimpleNode {
 			if (n != null) {
 				type = n.semanticAnalysis(table,functionName);
 
-				if(!type.equals("boolean"))
+				if(!type.equals("boolean") && !type.equals(""))
 					throw new Exception("&& expected boolean but found " + type);
 			}
 		}
