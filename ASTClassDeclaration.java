@@ -20,6 +20,7 @@ class ASTClassDeclaration extends SimpleNode {
 
   public void buildST(SymbolTable table, String functionName) throws Exception {
 	table.className = class_name;
+	table.extendsName = extends_class;
 
 	if (children != null) {
 		for (int i = 0; i < children.length; ++i) {

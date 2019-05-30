@@ -34,15 +34,15 @@ class ASTMethodParams extends SimpleNode {
         builder.append("aload_0\n");
 	  }
 
-		else if(functionName != null && (symbol = ST.functions.get(functionName).params.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+		else if(functionName != null && (symbol = ST.functions.get(functionName).params.get(parentparentNode.identifier)) != null) {
 			builder.append("aload " + symbol.order + "\n");
 		}
 
-		else if(functionName != null && (symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+		else if(functionName != null && (symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null) {
 			builder.append("aload " + symbol.order + "\n");
 		}
 
-		else if((symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null && symbol.type.equals(ST.className)) {
+		else if((symbol = ST.functions.get(functionName).locals.get(parentparentNode.identifier)) != null) {
 			builder.append("aload_0\ngetfield " + ST.className + "/" + parentNode.identifier + " L\n");
 		}
 
@@ -58,50 +58,88 @@ class ASTMethodParams extends SimpleNode {
 			}
 		}
       
-      if(parentparentNode.identifier.equals("this") || parentparentNode.identifier.equals("new " + ST.className) || (symbol != null && symbol.type.equals(ST.className)))
+      if(parentparentNode.identifier.equals("this") || parentparentNode.identifier.contains("new ") || symbol != null)
 			{
-        builder.append("invokevirtual " + ST.className + "." + parentNode.identifier + "(");
+		String className;
 
-        Iterator<Symbol> it = ST.functions.get(parentNode.identifier).params.values().iterator();
+		if(symbol != null)
+			className = symbol.type;
 
-        while(it.hasNext()) {
-          String type = it.next().type;
+		else if(parentparentNode.identifier.equals("this"))
+			className = ST.className;
 
-          if(type.equals(ST.className))
-            builder.append("L" + type);
+		else className = parentparentNode.identifier.split("new ")[1];
 
-          else if(type.equals("boolean"))
-            builder.append("Z");
+		builder.append("invokevirtual " + className + "." + parentNode.identifier + "(");
 
-          else if(type.equals("int"))
-			builder.append("I");
-			
-		  else if(type.equals("int[]"))
-            builder.append("[I");
-          
-          else builder.append("Ljava/lang/" + type + ";");
-        }
+		if(className.equals(ST.className) && ST.functions.get(parentNode.identifier) != null) {
+			Iterator<Symbol> it = ST.functions.get(parentNode.identifier).params.values().iterator();
 
-        builder.append(")");
+			while(it.hasNext()) {
+			  String type = it.next().type;
+	
+			  if(type.equals(ST.className))
+				builder.append("L" + type);
+	
+			  else if(type.equals("boolean"))
+				builder.append("Z");
+	
+			  else if(type.equals("int"))
+				builder.append("I");
+				
+			  else if(type.equals("int[]"))
+				builder.append("[I");
+			  
+			  else builder.append("Ljava/lang/" + type + ";");
+			}
+	
+			builder.append(")");
+	
+			if(ST.functions.get(parentNode.identifier).returnType.equals("boolean"))
+				builder.append("Z");
+	
+			else if(ST.functions.get(parentNode.identifier).returnType.equals("int"))
+				builder.append("I" );
+	
+			else if(ST.functions.get(parentNode.identifier).returnType.equals("int[]"))
+				builder.append("[I" );
+	
+			else if(ST.functions.get(parentNode.identifier).returnType.equals(ST.className))
+			  builder.append("L" + ST.className);
+	
+			else builder.append("Ljava/lang/" + parentNode.identifier + ";");
 
-				if(ST.functions.get(parentNode.identifier).returnType.equals("boolean"))
-					builder.append("Z");
+					
+			if(!isStore(1))
+				builder.append("\npop");
 
-				else if(ST.functions.get(parentNode.identifier).returnType.equals("int"))
-					builder.append("I" );
+			builder.append("\n");
+		}
 
-				else if(ST.functions.get(parentNode.identifier).returnType.equals("int[]"))
-					builder.append("[I" );
-
-        else if(ST.functions.get(parentNode.identifier).returnType.equals(ST.className))
-          builder.append("L" + ST.className);
-
-		else builder.append("Ljava/lang/" + parentNode.identifier + ";");
+		else {
+			for (int i = 0; i < children.length; i++) {
+				try{
+				  String type = ((SimpleNode) children[i]).semanticAnalysis(ST, functionName);
+	  
+				  if(type.equals("boolean"))
+				  builder.append("Z");
 		
-		if(!isStore(1))
-			builder.append("\npop");
-
-        builder.append("\n");
+				  else if(type.equals("int"))
+					builder.append("I" );
+					
+				  else if(type.equals("int[]"))
+					builder.append("[I" );
+	  
+				  else if(type.equals(ST.className))
+					builder.append("L" + ST.className);
+	  
+				  else builder.append("Ljava/lang/" + ((ASTLiteral) children[i]).identifier + ";");
+				  
+				} catch(Exception e){};
+					  }
+			
+			builder.append(")Z\n");
+		}
       }
 
       else {

@@ -3,6 +3,7 @@ import java.util.Enumeration;
 
 public class SymbolTable {
 	String className = "";
+	String extendsName = "";
 	Hashtable<String, Symbol> symbols = new Hashtable<>();
 	Hashtable<String, FunctionSymbol> functions = new Hashtable<>();
 
