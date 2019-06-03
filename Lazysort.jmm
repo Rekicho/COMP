@@ -3,6 +3,7 @@ class Lazysort extends Quicksort {
         int[] L;
         int i;
         Quicksort q;
+        boolean d;
 
         L = new int[10];
 
@@ -16,7 +17,7 @@ class Lazysort extends Quicksort {
         q = new Lazysort();
 
         q.quicksort(L);
-        q.printL(L);
+        d = q.printL(L);
     }
 
     public boolean quicksort(int[] L) {
