@@ -2,14 +2,11 @@
 
 ## Compile
 
-``` jjtree jmm.jjt ```
-
-``` javacc jmm.jj ```
-
-``` javac *.java ```
+``` javac -d bin ast/*.java jmm/*.java```
 
 ## Execute
 
-``` java jmm <input_file.jmm> ```
-``` java -jar jasmin.jar <input_file.j> ```
+``` cd bin ```
+``` java jmm/jmm ../examples/<input_file.jmm> ```
+``` java -jar ../jasmin.jar <input_file.j> ```
 ``` java ClassName ```

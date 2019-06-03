@@ -4,6 +4,6 @@
 # Settings
 .vscode
 
-!io.class
-!ioPlus.class
-!MathUtils.class
+!bin/io.class
+!bin/ioPlus.class
+!bin/MathUtils.class

@@ -29,6 +29,10 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 		}
 
 		try{
+			String[] split = args[0].split("\\.");
+			String[] path = split[split.length - 2].split("/");
+			String filename = path[path.length - 1];
+
 			jmm myjmm = new jmm(file);
 			SimpleNode root = myjmm.Program();
 			root.fixMethodCalls();
@@ -42,12 +46,12 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 			root.semanticAnalysis(ST, null);
 
 			StringBuilder builder = new StringBuilder();
-			builder.append(".source " + args[0] + "\n");
+			builder.append(".source " + filename + ".jmm\n");
 			root.generateCode(builder, ST, null);
 			//System.out.println("==========Code==========");
 			//System.out.println(builder.toString());
 
-			FileWriter fileWriter = new FileWriter(args[0].split("\\.")[0] + ".j");
+			FileWriter fileWriter = new FileWriter(filename + ".j");
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 			printWriter.print(builder.toString());
 			printWriter.close();
