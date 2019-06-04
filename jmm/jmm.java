@@ -52,8 +52,10 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 			root.semanticAnalysis(ST, null);
 
-			if(args.length == 2 && args[0].equals("-o"))
+			if(args.length == 2 && args[0].equals("-o")) {
 				root.optimizeO(ST, null);
+				ST.removeUnusedLocals();
+			}
 
 			StringBuilder builder = new StringBuilder();
 			builder.append(".source " + filename + ".jmm\n");

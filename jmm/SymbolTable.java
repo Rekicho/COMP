@@ -42,4 +42,17 @@ public class SymbolTable {
 			functionSymbol.dump();
 		}
 	}
+
+	public void removeUnusedLocals() {
+		String key;
+		Enumeration<String> t = functions.keys();
+		FunctionSymbol functionSymbol;
+
+		while (t.hasMoreElements()) {
+			key = (String) t.nextElement();
+			functionSymbol = (FunctionSymbol) functions.get(key);
+
+			functionSymbol.removeUnusedLocals();
+		}
+	}
 }

@@ -10,6 +10,7 @@ public class FunctionSymbol {
 	public String returnType;
 	public LinkedHashMap<String, Symbol> params = new LinkedHashMap<>();
 	public Hashtable<String, Symbol> locals = new Hashtable<>();
+	public int unusedLocals = 0;
 
 	public FunctionSymbol(String returnType) {
 		this.returnType = returnType;
@@ -49,5 +50,30 @@ public class FunctionSymbol {
 		}
 
 		System.out.println("\t\t\treturn: " + returnType);
+	}
+
+	public void removeUnusedLocals() {
+		String key;
+		Symbol value;
+
+		Enumeration<String> t = locals.keys();
+
+		while (t.hasMoreElements() == true) {
+			key = (String) t.nextElement();
+			value = (Symbol) locals.get(key);
+
+			if(value.defs <= 1 && !value.needsCode)
+				unusedLocals++;
+		}
+
+		t = locals.keys();
+
+		while (t.hasMoreElements() == true) {
+			key = (String) t.nextElement();
+			value = (Symbol) locals.get(key);
+
+			if(value.defs > 1 || value.needsCode)
+				value.order -= unusedLocals;
+		}
 	}
 }

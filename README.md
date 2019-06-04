@@ -1,5 +1,19 @@
 # COMP
 
+Method overloading not supported.
+
+## Optimizations
+
+### -r
+
+Not done yet.
+
+### -o
+
+Constant propagation: only on variables = CONSTANT that have only 1 definition.
+
+While template included in not optimized version.
+
 ## Compile
 
 ``` javac -d bin ast/*.java jmm/*.java ```
@@ -8,7 +22,7 @@
 
 ``` cd bin ```
 
-``` java jmm/jmm ../examples/<input_file.jmm> ```
+``` java jmm/jmm [-o] ../examples/<input_file.jmm> ```
 
 ``` java -jar ../jasmin.jar <input_file.j> ```
 

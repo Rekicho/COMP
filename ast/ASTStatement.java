@@ -149,6 +149,17 @@ class ASTStatement extends SimpleNode {
 		super.generateFunctionCode(builder,ST,functionName);
 	}
 
+	public void buildST(SymbolTable table, String functionName) throws Exception {
+		super.buildST(table,functionName);
+
+		Symbol symbol;
+
+		if(!type.equals("=") || (symbol = table.functions.get(functionName).locals.get(identifier)) == null)
+			return;
+
+		symbol.defs++;
+	}
+
 	public void optimizeO(SymbolTable ST, String functionName) {
 		if(functionName == null)
 			return;
@@ -164,11 +175,15 @@ class ASTStatement extends SimpleNode {
 			if((symbol = ST.functions.get(functionName).locals.get(identifier)) == null)
 				return;
 
+			if(symbol.defs > 1)
+				return;
+
 			ASTLiteral child = (ASTLiteral) children[0];
 
 			if (Character.isDigit(child.identifier.charAt(0)) || child.identifier.equals("this") || child.identifier.equals("true") || child.identifier.equals("false")) {
 				symbol.var_value = child.identifier;
 				needsCode = false;
+				symbol.needsCode = false;
 			}
 		}
 	}
