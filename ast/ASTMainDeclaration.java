@@ -79,5 +79,15 @@ class ASTMainDeclaration extends SimpleNode {
 		builder.append("return\n.end method\n\n");
 	}
 
+	public void optimizeO(SymbolTable ST, String functionName) {
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					n.optimizeO(ST,"main");
+				}
+			}
+		}
+	}
 }
 /* JavaCC - OriginalChecksum=0c5227e4bd79d47833b58d1707cedc06 (do not edit this line) */

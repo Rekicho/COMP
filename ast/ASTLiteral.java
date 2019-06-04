@@ -261,7 +261,36 @@ public class ASTLiteral extends SimpleNode {
 		else {
 			Symbol symbol;
 			if ((symbol = ST.functions.get(functionName).locals.get(identifier)) != null) {
-				if(symbol.type.equals("boolean") || symbol.type.equals("int"))
+				if(!symbol.var_value.equals("")) {
+					switch (symbol.var_value) {
+						case "this":
+							builder.append("aload_0");
+							break;
+						case "true":
+							builder.append("iconst_1");
+							break;
+						case "false":
+							builder.append("iconst_0");
+							break;
+						default:
+							int value = Integer.parseInt(symbol.var_value);
+
+							if (value >= 0 && value <= 5) {
+								builder.append("iconst_" + value);
+							} else if (value == -1) {
+								builder.append("iconst_m1");
+							} else if (value > -129 && value < 128) {
+								builder.append("bipush " + value);
+							} else if (value > -32769 && value < 32768) {
+								builder.append("sipush " + value);
+							} else {
+								builder.append("ldc " + value);
+							}
+							break;
+					}
+				}
+				
+				else if(symbol.type.equals("boolean") || symbol.type.equals("int"))
 					builder.append("iload " + symbol.order);
 
 				else builder.append("aload " + symbol.order);

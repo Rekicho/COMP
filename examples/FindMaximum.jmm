@@ -2,11 +2,13 @@ class FindMaximum {
 	int[] test_arr;
 
 	public int find_maximum(int[] arr) {
+		int ola;
 		int i;
 		int maximum;
 		int value;
 
-		i = 1;
+		ola = 1;
+		i = ola;
 		maximum = arr[0];
 		while (i < arr.length) {
 			value = arr[i];

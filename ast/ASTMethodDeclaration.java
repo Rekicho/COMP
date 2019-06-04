@@ -125,6 +125,17 @@ public class ASTMethodDeclaration extends SimpleNode {
 
 		else builder.append("areturn\n.end method\n\n");
 	}
+
+	public void optimizeO(SymbolTable ST, String functionName) {
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					n.optimizeO(ST,name);
+				}
+			}
+		}
+	}
 }
 /*
  * JavaCC - OriginalChecksum=11d41e8ab96800088d3eba562689294a (do not edit this

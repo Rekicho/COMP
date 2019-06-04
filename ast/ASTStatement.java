@@ -9,6 +9,7 @@ class ASTStatement extends SimpleNode {
 	public String type = "";
 	public String identifier = "";
 	static int labels = 0;
+	boolean needsCode = true;
 
   public ASTStatement(int id) {
     super(id);
@@ -31,6 +32,9 @@ class ASTStatement extends SimpleNode {
   }
 
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
+		if(!needsCode)
+			return;
+
 		if(type.equals("multiple")) {
 			super.generateCode(builder,ST,functionName);
 			return;
@@ -145,5 +149,28 @@ class ASTStatement extends SimpleNode {
 		super.generateFunctionCode(builder,ST,functionName);
 	}
 
+	public void optimizeO(SymbolTable ST, String functionName) {
+		if(functionName == null)
+			return;
+		
+		if(type.equals("multiple")) {
+			super.optimizeO(ST,functionName);
+			return;
+		}
+
+		if(type.equals("=") && children != null && children.length == 1 && children[0] instanceof ASTLiteral) {	
+			Symbol symbol;
+
+			if((symbol = ST.functions.get(functionName).locals.get(identifier)) == null)
+				return;
+
+			ASTLiteral child = (ASTLiteral) children[0];
+
+			if (Character.isDigit(child.identifier.charAt(0)) || child.identifier.equals("this") || child.identifier.equals("true") || child.identifier.equals("false")) {
+				symbol.var_value = child.identifier;
+				needsCode = false;
+			}
+		}
+	}
 }
 /* JavaCC - OriginalChecksum=2405f96baf2205473865575b3fc06196 (do not edit this line) */

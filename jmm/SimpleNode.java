@@ -179,6 +179,17 @@ public class SimpleNode implements Node {
 
 		return true;
 	}
+
+	public void optimizeO(SymbolTable ST, String functionName) {
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					n.optimizeO(ST,functionName);
+				}
+			}
+		}
+	}
 }
 
 /*

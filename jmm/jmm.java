@@ -11,25 +11,32 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 	public static void printUsage() {
 		System.out.println("Usage:  ");
-		System.out.println("       java jmm <input_file.jmm>");
+		System.out.println("       java jmm [-o] <input_file.jmm>");
 	}
 
 	public static void main(String args[]) throws ParseException {
-		if (args.length != 1) {
+		if (args.length < 1 || args.length > 2) {
 			printUsage();
 			return;
 		}
 
+		String inputFileName;
+
+		if(args.length == 2)
+			inputFileName = args[1];
+
+		else inputFileName = args[0];
+
 		FileInputStream file;
 		try {
-			file = new FileInputStream(args[0]);
+			file = new FileInputStream(inputFileName);
 		} catch (Exception e) {
-			System.err.println("File " + args[0] + " not found");
+			System.err.println("File " + inputFileName + " not found");
 			return;
 		}
 
 		try{
-			String[] split = args[0].split("\\.");
+			String[] split = inputFileName.split("\\.");
 			String[] path = split[split.length - 2].split("/");
 			String filename = path[path.length - 1];
 
@@ -45,11 +52,12 @@ public class jmm/* @bgen(jjtree) */ implements jmmTreeConstants, jmmConstants {/
 
 			root.semanticAnalysis(ST, null);
 
+			if(args.length == 2 && args[0].equals("-o"))
+				root.optimizeO(ST, null);
+
 			StringBuilder builder = new StringBuilder();
 			builder.append(".source " + filename + ".jmm\n");
 			root.generateCode(builder, ST, null);
-			//System.out.println("==========Code==========");
-			//System.out.println(builder.toString());
 
 			FileWriter fileWriter = new FileWriter(filename + ".j");
 			PrintWriter printWriter = new PrintWriter(fileWriter);
