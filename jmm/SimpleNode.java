@@ -190,6 +190,23 @@ public class SimpleNode implements Node {
 			}
 		}
 	}
+
+	public int depth() {
+		int max_child_depth = 0;
+		if (children != null) {
+			for (int i = 0; i < children.length; ++i) {
+				SimpleNode n = (SimpleNode) children[i];
+				if (n != null) {
+					int temp = n.depth();
+
+					if(temp > max_child_depth)
+						max_child_depth = temp;
+				}
+			}
+		}
+
+		return max_child_depth + 1;
+	}
 }
 
 /*

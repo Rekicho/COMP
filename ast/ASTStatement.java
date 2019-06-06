@@ -54,11 +54,11 @@ class ASTStatement extends SimpleNode {
 		if(type.equals("while")) {
 			int label = labels;
 			labels++;
-			builder.append("WHILE" + label + ":\n");
 			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
-			builder.append("ifeq ENDWHILE" + label + "\n");
+			builder.append("ifeq ENDWHILE" + label + "\nWHILE" + label + ":\n");
 			((SimpleNode)children[1]).generateCode(builder, ST, functionName);
-			builder.append("goto WHILE" + label + "\nENDWHILE" + label + ":\n");
+			((SimpleNode)children[0]).generateFunctionCode(builder, ST, functionName);
+			builder.append("ifne WHILE" + label + "\nENDWHILE" + label + ":\n");
 
 			return;
 		}

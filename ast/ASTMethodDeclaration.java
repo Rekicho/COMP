@@ -107,7 +107,7 @@ public class ASTMethodDeclaration extends SimpleNode {
 
 		else builder.append("Ljava/lang/" + returnType + ";");
 
-		builder.append("\n.limit stack 100\n.limit locals " + ((int) ST.functions.get(name).params.size() + ST.functions.get(name).locals.size() + 1  - ST.functions.get(name).unusedLocals) + "\n");
+		builder.append("\n.limit stack " + ((int) depth() * 2) + "\n.limit locals " + ((int) ST.functions.get(name).params.size() + ST.functions.get(name).locals.size() + 1  - ST.functions.get(name).unusedLocals) + "\n");
 		
 		if (children != null) {
 			for (int i = 0; i < children.length - 1; ++i) {

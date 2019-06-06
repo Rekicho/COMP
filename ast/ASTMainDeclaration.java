@@ -65,7 +65,7 @@ class ASTMainDeclaration extends SimpleNode {
 	}
 	
 	public void generateCode(StringBuilder builder, SymbolTable ST, String functionName) {
-		builder.append(".method public static main([Ljava/lang/String;)V\n.limit stack 100\n.limit locals " + ((int) ST.functions.get("main").params.size() + ST.functions.get("main").locals.size() - ST.functions.get("main").unusedLocals) + "\n");
+		builder.append(".method public static main([Ljava/lang/String;)V\n.limit stack " + ((int) depth() * 2) + "\n.limit locals " + ((int) ST.functions.get("main").params.size() + ST.functions.get("main").locals.size() - ST.functions.get("main").unusedLocals) + "\n");
 
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
