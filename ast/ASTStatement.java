@@ -180,6 +180,9 @@ class ASTStatement extends SimpleNode {
 
 			ASTLiteral child = (ASTLiteral) children[0];
 
+			if(child.children != null)
+				return;
+
 			if (Character.isDigit(child.identifier.charAt(0)) || child.identifier.equals("this") || child.identifier.equals("true") || child.identifier.equals("false")) {
 				symbol.var_value = child.identifier;
 				needsCode = false;
