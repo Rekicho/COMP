@@ -7,3 +7,7 @@
 !bin/io.class
 !bin/ioPlus.class
 !bin/MathUtils.class
+
+!io.class
+!ioPlus.class
+!MathUtils.class
